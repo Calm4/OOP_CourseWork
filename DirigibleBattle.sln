@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirigibleBattle", "DirigibleBattle\DirigibleBattle.csproj", "{D359357E-39FE-455D-89F5-E909A42E49F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameLibrary", "GameLibrary\GameLibrary.csproj", "{5EACFB5D-ECE4-45E4-BE83-6C77D5C94F41}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D359357E-39FE-455D-89F5-E909A42E49F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D359357E-39FE-455D-89F5-E909A42E49F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D359357E-39FE-455D-89F5-E909A42E49F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EACFB5D-ECE4-45E4-BE83-6C77D5C94F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EACFB5D-ECE4-45E4-BE83-6C77D5C94F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EACFB5D-ECE4-45E4-BE83-6C77D5C94F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EACFB5D-ECE4-45E4-BE83-6C77D5C94F41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
