@@ -11,8 +11,7 @@ namespace DirigibleBattle
     {
         static void Main()
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Run(60);
+            
         }
     }
 }

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace AmmunitionLibrary
 {
-    internal class Bullet
+    public abstract class Bullet
     {
-
+        public int Speed { get; set; }
+        public int Damage { get; set; }
     }
 }

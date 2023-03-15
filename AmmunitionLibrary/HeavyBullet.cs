@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AmmunitionLibrary
 {
-    internal class HeavyBullet
+    public class HeavyBullet : Bullet
     {
+
     }
 }

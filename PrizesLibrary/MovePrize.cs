@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary
 {
-    internal class MovePrize
+    internal class MovePrize : Prize
     {
     }
 }

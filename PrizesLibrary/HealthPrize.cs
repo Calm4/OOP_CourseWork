@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary
 {
-    internal class HealthPrize
+    internal class HealthPrize : Prize
     {
     }
 }
