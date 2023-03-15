@@ -12,17 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using OpenTK;
+using OpenTK.Graphics;
 namespace DirigibleBattle
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : GameWindow
     {
         public MainWindow()
         {
-            InitializeComponent();
+            
         }
     }
 }
