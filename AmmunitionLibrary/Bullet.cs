@@ -8,5 +8,6 @@ namespace AmmunitionLibrary
 {
     internal class Bullet
     {
+
     }
 }
