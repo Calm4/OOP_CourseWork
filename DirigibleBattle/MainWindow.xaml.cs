@@ -22,7 +22,6 @@ namespace DirigibleBattle
     {
         public MainWindow()
         {
-
             InitializeComponent();
         }
     }
