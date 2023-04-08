@@ -9,8 +9,8 @@ namespace GameLibrary
 
     public class Dirigible
     {
-        public int Health { get; set; } = 10;
-        public int Armor { get; set; } = 10;
+        public int Health { get; set; } = 100;
+        public int Armor { get; set; } = 100;
 
         public bool IsAlive(int health,int armor)
         {

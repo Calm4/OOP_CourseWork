@@ -9,9 +9,6 @@ namespace DirigibleBattle
 {
     internal class StartGame
     {
-        static void Main()
-        {
-            
-        }
+        
     }
 }

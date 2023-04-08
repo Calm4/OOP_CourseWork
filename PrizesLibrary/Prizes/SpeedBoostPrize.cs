@@ -11,7 +11,7 @@ namespace PrizesLibrary.Prizes
     {
         public void UsePrize(Dirigible dirigible)
         {
-            dirigible.IncreaseSpeed();
+            //dirigible.IncreaseSpeed();
         }
     }
 }
