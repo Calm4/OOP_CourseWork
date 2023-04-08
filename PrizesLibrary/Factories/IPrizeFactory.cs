@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrizesLibrary
+namespace PrizesLibrary.Factories
 {
-    public abstract class Prize
+    internal interface IPrizeFactory
     {
     }
 }

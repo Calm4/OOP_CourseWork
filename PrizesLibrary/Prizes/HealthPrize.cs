@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PrizesLibrary
+namespace PrizesLibrary.Prizes
 {
-    internal class MovePrize : Prize
+    internal class HealthPrize
     {
     }
 }
