@@ -14,6 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OpenTK;
 using OpenTK.Graphics;
+using GameLibrary;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
+
 namespace DirigibleBattle
 {
     /// <summary>
