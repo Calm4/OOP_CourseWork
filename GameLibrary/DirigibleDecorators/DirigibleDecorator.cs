@@ -7,7 +7,7 @@ using GameLibrary.Dirigible;
 
 namespace GameLibrary.DirigibleDecorators
 {
-    public class DirigibleDecorator : AbstractDirigible
+    public abstract class DirigibleDecorator : AbstractDirigible
     {
         protected AbstractDirigible _dirigible;
 
