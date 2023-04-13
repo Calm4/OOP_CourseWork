@@ -54,6 +54,7 @@
     <Compile Include="Dirigible\AbstractDirigible.cs" />
     <Compile Include="Dirigible\BasicDirigible.cs" />
     <Compile Include="GameProcessing.cs" />
+    <Compile Include="ObjectRenderer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wind.cs" />
   </ItemGroup>

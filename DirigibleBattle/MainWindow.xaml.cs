@@ -39,7 +39,6 @@ namespace DirigibleBattle
             glControl.InvalidateVisual();
 
             GL.Enable(EnableCap.Texture2D);
-
         }
 
         
@@ -54,27 +53,14 @@ namespace DirigibleBattle
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(Color4.BlanchedAlmond);
 
-            GL.BindTexture(TextureTarget.Texture2D, backGroundTexture);
-            GL.Begin(PrimitiveType.Quads);
+            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
-            //GL.Color3(System.Drawing.Color.Red);
-            GL.TexCoord2(0, 0);
-            GL.Vertex2(-1f, 1f);
-
-           // GL.Color3(System.Drawing.Color.Blue);
-            GL.TexCoord2(1, 0);
-            GL.Vertex2(1f, 1f);
-
-           // GL.Color3(System.Drawing.Color.Green);
-            GL.TexCoord2(1, 1);
-            GL.Vertex2(1f, -1f);
-
-            //GL.Color3(System.Drawing.Color.Magenta);
-            GL.TexCoord2(0, 1);
-            GL.Vertex2(-1f, -1f);
-
-            GL.End();
-
+            ObjectRenderer.RenderObjects(backGroundTexture, new Vector2[4] {
+                new Vector2(-1.0f, -1.0f),
+                new Vector2(1.0f, -1.0f),
+                new Vector2(1.0f, 1.0f),
+                new Vector2(-1.0f, 1.0f),
+            });
         }
     }
 
