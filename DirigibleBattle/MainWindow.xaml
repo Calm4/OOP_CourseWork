@@ -3,12 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:local="clr-namespace:DirigibleBattle"
         mc:Ignorable="d"
         Title="Dirigible Battle" Height="600" Width="800" Icon="/icon.png">
     <Grid x:Name="GameWindowGrid">
-        <WindowsFormsHost HorizontalAlignment="Left"  VerticalAlignment="Top" Width="800" Height="600">
-            
-        </WindowsFormsHost>
+        <glWpfControl:GLWpfControl x:Name="glControl" Loaded="glControl_Loaded" Render="glControl_Render"/>
     </Grid>
 </Window>
