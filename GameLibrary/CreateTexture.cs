@@ -19,7 +19,7 @@ namespace GameLibrary
 
             if (!File.Exists("Sprites/" + texturePath))
             {
-                throw new FileNotFoundException("File not found at 'Content/" + texturePath + "'");
+                throw new FileNotFoundException("File not found at 'Sprites/" + texturePath + "'");
             }
 
             int textureID = GL.GenTexture();

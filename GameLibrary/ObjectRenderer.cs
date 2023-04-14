@@ -22,8 +22,6 @@ namespace GameLibrary
                 new Vector2(0,1),// └ лево низ
             };
 
-            GL.Enable(EnableCap.Texture2D);
-
             GL.BindTexture(TextureTarget.Texture2D, textureID);
 
             GL.Begin(PrimitiveType.Quads);
@@ -44,6 +42,9 @@ namespace GameLibrary
             // лево право низ верх z-вблизи z-вдали
             GL.Ortho(-1f, 1f, 1f, -1f, -1f, 1f);
 
+
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
 
         }
     }

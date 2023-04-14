@@ -20,6 +20,8 @@ using OpenTK.Input;
 using OpenTK.Wpf;
 using System.Security.Policy;
 using System.Drawing;
+using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace DirigibleBattle
 {
@@ -28,7 +30,12 @@ namespace DirigibleBattle
     /// </summary>
     public partial class MainWindow 
     {
+       
         int backGroundTexture;
+        int mountainRange;
+        int firstDirigibleTexture;
+        int secondDirigibleTexture;
+        
 
         public MainWindow()
         {
@@ -37,15 +44,26 @@ namespace DirigibleBattle
             var settings = new GLWpfControlSettings{MajorVersion = 3, MinorVersion = 6 };
             glControl.Start(settings);
             glControl.InvalidateVisual();
-
             GL.Enable(EnableCap.Texture2D);
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(16.0);
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
-        
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            Debug.WriteLine(DateTime.Now);
+        }
 
         private void glControl_Loaded(object sender, RoutedEventArgs e)
         {
+
             backGroundTexture = CreateTexture.LoadTexture("sky.png");
+            mountainRange = CreateTexture.LoadTexture("mountine.png");
+            firstDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
+            secondDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
         }
 
         private void glControl_Render(TimeSpan obj)
@@ -55,11 +73,40 @@ namespace DirigibleBattle
 
             ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
+            
+            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
+
             ObjectRenderer.RenderObjects(backGroundTexture, new Vector2[4] {
                 new Vector2(-1.0f, -1.0f),
                 new Vector2(1.0f, -1.0f),
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1.0f),
+            });
+            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
+
+            ObjectRenderer.RenderObjects(firstDirigibleTexture, new Vector2[4] {
+                new Vector2(-0.75f, -0.5f),
+                new Vector2(-0.5f, -0.5f),
+                new Vector2(-0.5f, -0.25f),
+                new Vector2(-0.75f, -0.25f),
+            });
+
+            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
+
+            ObjectRenderer.RenderObjects(secondDirigibleTexture, new Vector2[4] {
+                new Vector2(0.75f, 0.25f),
+                new Vector2(0.5f, 0.25f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.75f, 0.5f),
+            });
+
+            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
+
+            ObjectRenderer.RenderObjects(mountainRange, new Vector2[4] {
+                new Vector2(-1.0f, 0.8f),
+                new Vector2(1.0f, 0.8f),
+                new Vector2(1.0f, 1.0f),
+                new Vector2(-1.0f, 1f),
             });
         }
     }
