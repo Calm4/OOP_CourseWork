@@ -10,9 +10,9 @@ namespace PrizesLibrary.Prizes
 {
     internal class SpeedBoostPrize : IPrize
     {
-        public void UsePrize(BasicDirigible dirigible)
+        public void UsePrize(AbstractDirigible dirigible)
         {
-            //dirigible.IncreaseSpeed();
+            dirigible.GetSpeed();
         }
     }
 }

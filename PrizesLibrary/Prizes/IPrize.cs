@@ -10,6 +10,6 @@ namespace PrizesLibrary.Prizes
 {
     internal interface IPrize
     {
-        void UsePrize(BasicDirigible dirigible);
+        void UsePrize(AbstractDirigible dirigible);
     }
 }

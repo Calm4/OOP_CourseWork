@@ -11,11 +11,12 @@ namespace GameLibrary.Dirigible
 {
     public class BasicDirigible : AbstractDirigible
     {
-        public BasicDirigible(Vector2 start,int textrure)
+        public BasicDirigible(Vector2 start, int textrure)
         {
             PositionCenter = start;
             dirigibleID = textrure;
             this.Speed = new Vector2(0, 0.001f);
+
         }
         public Vector2 Speed { get; set; }
         public Vector2 PositionCenter;
@@ -59,7 +60,9 @@ namespace GameLibrary.Dirigible
         public override void Idle()
         {
             isMove = true;
+
             PositionCenter += Speed;
+
             isMove = false;
         }
 

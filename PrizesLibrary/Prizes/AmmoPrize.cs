@@ -10,9 +10,9 @@ namespace PrizesLibrary.Prizes
 {
     internal class AmmoPrize : IPrize
     {
-        public void UsePrize(BasicDirigible dirigible)
+        public void UsePrize(AbstractDirigible dirigible)
         {
-            //dirigible.RefillAmmo();
+            dirigible.GetAmmo();
         }
     }
 }
