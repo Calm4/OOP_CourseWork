@@ -128,24 +128,7 @@ namespace DirigibleBattle
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1f),
             });
-            //ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
-            // ЭТО БОЛЬШЕ НЕ НАДО!
-            /*ObjectRenderer.RenderObjects(firstDirigibleTexture, new Vector2[4] {
-                new Vector2(-0.7f, -0.5f),
-                new Vector2(-0.5f, -0.5f),
-                new Vector2(-0.5f, -0.3f),
-                new Vector2(-0.7f, -0.3f),
-            });*/
-
-            //ObjectRenderer.Begin((int)this.Width, (int)this.Height);
-
-            /*ObjectRenderer.RenderObjects(secondDirigibleTexture, new Vector2[4] {
-                new Vector2(0.75f, 0.25f),
-                new Vector2(0.5f, 0.25f),
-                new Vector2(0.5f, 0.5f),
-                new Vector2(0.75f, 0.5f),
-            });*/
 
 
 
@@ -158,53 +141,46 @@ namespace DirigibleBattle
             KeyboardState keyboardState = OpenTK.Input.Keyboard.GetState();
             Vector2 moveVectorFirstPlayer = Vector2.Zero;
             Vector2 moveVectorSecondPlayer = Vector2.Zero;
-            float firstPlayerSpeed = 0.01f ,secondPlayerSpeed = 0.01f;
+            //firstPlayer.Move(new Vector2(0f, -0.01f)); Вдруг понадобится
+            float firstPlayerSpeed = 0.01f, secondPlayerSpeed = 0.01f;
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.W))
             {
-                moveVectorFirstPlayer += new Vector2(0f,-0.001f);
-                //firstPlayer.Move(new Vector2(0f, -0.01f));
+                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.S))
             {
                 moveVectorFirstPlayer += new Vector2(0f, 0.001f);
-                //firstPlayer.Move(new Vector2(0f, 0.01f));
             }
-            
+
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.A))
             {
-                moveVectorFirstPlayer += new Vector2(-0.001f,0f);
-                //firstPlayer.Move(new Vector2(-0.01f, 0f));
+                moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.D))
             {
-                moveVectorFirstPlayer += new Vector2(0.001f,0f);
-                //firstPlayer.Move(new Vector2(0.01f, 0f));
+                moveVectorFirstPlayer += new Vector2(0.001f, 0f);
             }
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Up))
             {
                 moveVectorSecondPlayer += new Vector2(0f, -0.001f);
-                //firstPlayer.Move(new Vector2(0f, -0.01f));
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Down))
             {
                 moveVectorSecondPlayer += new Vector2(0f, 0.001f);
-                //firstPlayer.Move(new Vector2(0f, 0.01f));
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Left))
             {
                 moveVectorSecondPlayer += new Vector2(-0.001f, 0f);
-                //firstPlayer.Move(new Vector2(-0.01f, 0f));
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Right))
             {
                 moveVectorSecondPlayer += new Vector2(0.001f, 0f);
-                //firstPlayer.Move(new Vector2(0.01f, 0f));
             }
             // Нормализует передвижение 
             if (moveVectorFirstPlayer != Vector2.Zero)
@@ -217,7 +193,7 @@ namespace DirigibleBattle
             }
             firstPlayer.Move(moveVectorFirstPlayer);
             secondPlayer.Move(moveVectorSecondPlayer);
-            
+
         }
 
 
