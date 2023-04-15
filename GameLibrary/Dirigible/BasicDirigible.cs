@@ -11,9 +11,9 @@ namespace GameLibrary.Dirigible
 {
     public class BasicDirigible : AbstractDirigible
     {
-        public BasicDirigible(Vector2 start, int textrure)
+        public BasicDirigible(Vector2 startPosition, int textrure)
         {
-            PositionCenter = start;
+            PositionCenter = startPosition;
             dirigibleID = textrure;
             this.Speed = new Vector2(0, 0.001f);
 
@@ -105,8 +105,8 @@ namespace GameLibrary.Dirigible
         }
         private static float[] Convert(float pointX, float pointY)
         {
-            float centralPointX = 0.5f; // значения (0,0) в OpenGL и WinForms не совпадают
-            float centralPointY = 0.5f; // в Winforms - левый верхний гол, OpenGL - центр
+            float centralPointX = 0.5f; 
+            float centralPointY = 0.5f; 
 
             float[] resultPoint = new float[2];
 
