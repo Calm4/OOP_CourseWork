@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,6 +85,32 @@ namespace GameLibrary.Dirigible
                 PositionCenter + new Vector2(0.1f, 0.1f),
                 PositionCenter + new Vector2(-0.1f, 0.1f),
            };
+        }
+
+        public RectangleF GetCollider()
+        {
+            Vector2[] colliderPosition = GetPosition(); // добавить более точную коллизию!
+
+            float colliderWidth = (colliderPosition[2].X - colliderPosition[3].X) / 2.0f;
+            float colliderHeight = (colliderPosition[3].Y - colliderPosition[0].Y) / 2.0f;
+
+            float[] convertedLeftTop = Convert(colliderPosition[3].X, colliderPosition[3].Y);
+
+            RectangleF collider = new RectangleF(convertedLeftTop[0], convertedLeftTop[1], colliderWidth, colliderHeight);
+
+            return collider;
+        }
+        private static float[] Convert(float pointX, float pointY)
+        {
+            float centralPointX = 0.5f; // значения (0,0) в OpenGL и WinForms не совпадают
+            float centralPointY = 0.5f; // в Winforms - левый верхний гол, OpenGL - центр
+
+            float[] resultPoint = new float[2];
+
+            resultPoint[0] = centralPointX + pointX / 2.0f;
+            resultPoint[1] = centralPointY - pointY / 2.0f;
+
+            return resultPoint;
         }
     }
 }

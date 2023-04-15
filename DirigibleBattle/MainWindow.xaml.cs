@@ -34,31 +34,35 @@ namespace DirigibleBattle
     /// </summary>
     public partial class MainWindow
     {
-
-        int backGroundTexture;
-        int mountainRange;
         BasicDirigible firstPlayer;
         BasicDirigible secondPlayer;
 
+        DispatcherTimer timer;
+        RectangleF mountineCollider;
+
+        int backGroundTexture;
+        int mountainRange;
+
         int firstDirigibleTexture;
         int secondDirigibleTexture;
-        bool isWdown, isSdown, isIdown, isKdown, isJdown, isDdown;
 
         public MainWindow()
         {
-            InitializeComponent();
 
+            InitializeComponent();
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
             glControl.Start(settings);
             glControl.InvalidateVisual();
             GL.Enable(EnableCap.Texture2D);
+
             firstDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
             secondDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
             firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTexture);
             secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTexture);
 
 
-            DispatcherTimer timer = new DispatcherTimer();
+
+            timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(16.0); // ~60 FPS
             timer.Tick += Timer_Tick;
             timer.Start();
@@ -68,18 +72,29 @@ namespace DirigibleBattle
 
         private void GameRender()
         {
-            if (isWdown)
-                firstPlayer.Move(new Vector2(0f, 0.01f));
-            if (isSdown)
-                firstPlayer.Move(new Vector2(0f, -0.01f));
-            if (isIdown)
-                secondPlayer.Move(new Vector2(0f, 0.01f));
-            if (isKdown)
-                secondPlayer.Move(new Vector2(0f, -0.01f));
-
             firstPlayer.Idle();
             secondPlayer.Idle();
 
+            if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
+            {
+                timer.Stop();
+
+                MessageBox.Show("НИЧЬЯ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
+
+            if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || !firstPlayer.IsAlive())
+            {
+                timer.Stop();
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
+            if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
+            {
+                timer.Stop();
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
         }
 
 
@@ -129,11 +144,12 @@ namespace DirigibleBattle
                 new Vector2(-1.0f, 1f),
             });
 
-
-
+            mountineCollider = new RectangleF(0.0f, -0.1f, 1.0f, 0.125f);
 
             firstPlayer.Render();
             secondPlayer.Render();
+
+
         }
 
         public void InputControl()
