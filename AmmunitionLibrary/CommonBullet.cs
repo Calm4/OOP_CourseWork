@@ -31,9 +31,13 @@ namespace AmmunitionLibrary
                 PositionCenter + new Vector2(-0.03f, 0.015f),
             };
         }
+        public override Vector2 Direction(float x, float y)
+        {
+            return new Vector2(x,y);
+        }
         public override void Fire()
         {
-            PositionCenter += new Vector2(0.025f, 0);
+            PositionCenter += Direction(0.025f,0f);
         }
         public override RectangleF GetCollider()
         {

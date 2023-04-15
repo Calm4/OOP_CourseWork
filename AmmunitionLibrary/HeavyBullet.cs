@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -9,6 +10,11 @@ namespace AmmunitionLibrary
 {
     public class HeavyBullet : Bullet
     {
+        public override Vector2 Direction(float x, float y)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Fire()
         {
             throw new NotImplementedException();

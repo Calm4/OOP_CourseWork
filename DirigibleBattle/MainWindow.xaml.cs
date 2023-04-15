@@ -47,6 +47,7 @@ namespace DirigibleBattle
         DispatcherTimer timer;
         RectangleF mountineCollider;
         RectangleF screenBorderCollider;
+        KeyboardState keyboardState;
 
         int backGroundTexture;
         int mountainRange;
@@ -112,7 +113,10 @@ namespace DirigibleBattle
             }
             for (int i = 0; i < firstPlayerAmmo.Count; i++)
             {
+
                 firstPlayerAmmo[i].Fire();
+
+
                 if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
                 {
                     firstPlayerAmmo.RemoveAt(i);
@@ -127,6 +131,7 @@ namespace DirigibleBattle
 
             for (int i = 0; i < secondPlayerAmmo.Count; i++)
             {
+
                 secondPlayerAmmo[i].Fire();
                 if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
                 {
@@ -208,7 +213,7 @@ namespace DirigibleBattle
         public void InputControl()
         {
 
-            KeyboardState keyboardState = OpenTK.Input.Keyboard.GetState();
+            keyboardState = OpenTK.Input.Keyboard.GetState();
             Vector2 moveVectorFirstPlayer = Vector2.Zero;
             Vector2 moveVectorSecondPlayer = Vector2.Zero;
             //firstPlayer.Move(new Vector2(0f, -0.01f)); Вдруг понадобится
@@ -221,6 +226,7 @@ namespace DirigibleBattle
             {
 
                 moveVectorFirstPlayer += new Vector2(0f, -0.001f);
+                
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.S))
@@ -232,6 +238,7 @@ namespace DirigibleBattle
             {
                 firstPlayer.dirigibleID = firstDirigibleTextureLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
+                firstPlayerAmmo[0].Direction(-0.5f,0f);
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.D))

@@ -18,5 +18,7 @@ namespace AmmunitionLibrary
         public abstract RectangleF GetCollider();
         public abstract void Fire();
 
+        public abstract Vector2 Direction(float x, float y);
+
     }
 }
