@@ -1,4 +1,5 @@
 ﻿using GameLibrary.Dirigible;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace GameLibrary.DirigibleDecorators
     {
         public SpeedBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
         
-        public float GetExtraSpeed() { return 20; }
+        public Vector2 GetExtraSpeed() { return new Vector2(); }
 
-        public override float GetSpeed()
+        public override void Move(Vector2 movement)
         {
-            return base.GetSpeed() + GetExtraSpeed();
+            base.Move(movement);    
         }
     }
 }

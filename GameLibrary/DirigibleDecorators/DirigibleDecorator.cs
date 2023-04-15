@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameLibrary.Dirigible;
+using OpenTK;
 
 namespace GameLibrary.DirigibleDecorators
 {
@@ -31,7 +32,7 @@ namespace GameLibrary.DirigibleDecorators
             return _dirigible.GetAmmo();
         }
 
-        public override float GetSpeed()
+        public override Vector2 GetSpeed()
         {
             return _dirigible.GetSpeed();
         }
@@ -44,6 +45,14 @@ namespace GameLibrary.DirigibleDecorators
         public override bool IsAlive()
         {
             return _dirigible.IsAlive();
+        }
+        public override void Idle()
+        {
+            _dirigible.Idle();
+        }
+        public override void Move(Vector2 movement)
+        {
+            _dirigible.Move(movement);
         }
     }
 }

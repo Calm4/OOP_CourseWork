@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using OpenTK;
 using OpenTK.Graphics;
 using GameLibrary;
+using GameLibrary.DirigibleDecorators;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using OpenTK.Wpf;
@@ -22,39 +23,72 @@ using System.Security.Policy;
 using System.Drawing;
 using System.Windows.Threading;
 using System.Diagnostics;
+using GameLibrary.Dirigible;
+
+
 
 namespace DirigibleBattle
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow 
+    public partial class MainWindow
     {
-       
+
         int backGroundTexture;
         int mountainRange;
+        BasicDirigible firstPlayer;
+        BasicDirigible secondPlayer;
+
         int firstDirigibleTexture;
         int secondDirigibleTexture;
-        
+        bool isWdown, isSdown, isIdown, isKdown, isJdown, isDdown;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            var settings = new GLWpfControlSettings{MajorVersion = 3, MinorVersion = 6 };
+            var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
             glControl.Start(settings);
             glControl.InvalidateVisual();
             GL.Enable(EnableCap.Texture2D);
+            firstDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
+            secondDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
+            firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTexture);
+            secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTexture);
+
 
             DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(16.0);
+            timer.Interval = TimeSpan.FromMilliseconds(16.0); // ~60 FPS
             timer.Tick += Timer_Tick;
             timer.Start();
+
+
         }
+
+        private void GameRender()
+        {
+            if (isWdown)
+                firstPlayer.Move(new Vector2(0f, 0.01f));
+            if (isSdown)
+                firstPlayer.Move(new Vector2(0f, -0.01f));
+            if (isIdown)
+                secondPlayer.Move(new Vector2(0f, 0.01f));
+            if (isKdown)
+                secondPlayer.Move(new Vector2(0f, -0.01f));
+
+            firstPlayer.Idle();
+            secondPlayer.Idle();
+
+        }
+
+
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            Debug.WriteLine(DateTime.Now);
+            GameRender();
+            InputControl();
+            glControl.InvalidateVisual();
         }
 
         private void glControl_Loaded(object sender, RoutedEventArgs e)
@@ -62,8 +96,11 @@ namespace DirigibleBattle
 
             backGroundTexture = CreateTexture.LoadTexture("sky.png");
             mountainRange = CreateTexture.LoadTexture("mountine.png");
-            firstDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
-            secondDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
+
+
+
+            Debug.WriteLine(firstPlayer + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         }
 
         private void glControl_Render(TimeSpan obj)
@@ -73,7 +110,7 @@ namespace DirigibleBattle
 
             ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
-            
+
             ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
             ObjectRenderer.RenderObjects(backGroundTexture, new Vector2[4] {
@@ -81,23 +118,6 @@ namespace DirigibleBattle
                 new Vector2(1.0f, -1.0f),
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1.0f),
-            });
-            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
-
-            ObjectRenderer.RenderObjects(firstDirigibleTexture, new Vector2[4] {
-                new Vector2(-0.75f, -0.5f),
-                new Vector2(-0.5f, -0.5f),
-                new Vector2(-0.5f, -0.25f),
-                new Vector2(-0.75f, -0.25f),
-            });
-
-            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
-
-            ObjectRenderer.RenderObjects(secondDirigibleTexture, new Vector2[4] {
-                new Vector2(0.75f, 0.25f),
-                new Vector2(0.5f, 0.25f),
-                new Vector2(0.5f, 0.5f),
-                new Vector2(0.75f, 0.5f),
             });
 
             ObjectRenderer.Begin((int)this.Width, (int)this.Height);
@@ -108,7 +128,111 @@ namespace DirigibleBattle
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1f),
             });
-        }
-    }
+            //ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
+            // ЭТО БОЛЬШЕ НЕ НАДО!
+            /*ObjectRenderer.RenderObjects(firstDirigibleTexture, new Vector2[4] {
+                new Vector2(-0.7f, -0.5f),
+                new Vector2(-0.5f, -0.5f),
+                new Vector2(-0.5f, -0.3f),
+                new Vector2(-0.7f, -0.3f),
+            });*/
+
+            //ObjectRenderer.Begin((int)this.Width, (int)this.Height);
+
+            /*ObjectRenderer.RenderObjects(secondDirigibleTexture, new Vector2[4] {
+                new Vector2(0.75f, 0.25f),
+                new Vector2(0.5f, 0.25f),
+                new Vector2(0.5f, 0.5f),
+                new Vector2(0.75f, 0.5f),
+            });*/
+
+
+
+            firstPlayer.Render();
+            secondPlayer.Render();
+        }
+
+        public void InputControl()
+        {
+            KeyboardState keyboardState = OpenTK.Input.Keyboard.GetState();
+            Vector2 moveVector = Vector2.Zero;
+
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.W))
+            {
+                moveVector += new Vector2(0f,-0.001f);
+                //firstPlayer.Move(new Vector2(0f, -0.01f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.S))
+            {
+                moveVector += new Vector2(0f, 0.001f);
+                //firstPlayer.Move(new Vector2(0f, 0.01f));
+            }
+            
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.A))
+            {
+                moveVector += new Vector2(-0.001f,0f);
+                //firstPlayer.Move(new Vector2(-0.01f, 0f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.D))
+            {
+                moveVector += new Vector2(0.001f,0f);
+                //firstPlayer.Move(new Vector2(0.01f, 0f));
+            }
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Up))
+            {
+                moveVector += new Vector2(0f, -0.001f);
+                //firstPlayer.Move(new Vector2(0f, -0.01f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Down))
+            {
+                moveVector += new Vector2(0f, 0.001f);
+                //firstPlayer.Move(new Vector2(0f, 0.01f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Left))
+            {
+                moveVector += new Vector2(-0.001f, 0f);
+                //firstPlayer.Move(new Vector2(-0.01f, 0f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Right))
+            {
+                moveVector += new Vector2(0.001f, 0f);
+                //firstPlayer.Move(new Vector2(0.01f, 0f));
+            }
+            // Нормализует передвижение 
+            if (moveVector != Vector2.Zero)
+            {
+                moveVector = Vector2.Normalize(moveVector) * 0.01f;
+            }
+            firstPlayer.Move(moveVector);
+            secondPlayer.Move(moveVector);
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Up))
+            {
+                secondPlayer.Move(new Vector2(0f, -0.01f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Down))
+            {
+                secondPlayer.Move(new Vector2(0f, 0.01f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Left))
+            {
+                secondPlayer.Move(new Vector2(-0.01f, 0f));
+            }
+
+            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Right))
+            {
+                secondPlayer.Move(new Vector2(0.01f, 0f));
+            }
+        }
+
+
+    }
 }
