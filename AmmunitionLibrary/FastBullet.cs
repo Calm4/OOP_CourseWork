@@ -10,11 +10,7 @@ namespace AmmunitionLibrary
 {
     public class FastBullet : Bullet
     {
-        public override Vector2 Direction(float x, float y)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public override void Fire()
         {
             throw new NotImplementedException();

@@ -54,9 +54,11 @@ namespace DirigibleBattle
 
         int commonBulletTexture;
 
-        int firstDirigibleTexture;
+        int firstDirigibleTextureRight;
         int firstDirigibleTextureLeft;
-        int secondDirigibleTexture;
+        int secondDirigibleTextureRight;
+        int secondDirigibleTextureLeft;
+       
 
         public MainWindow()
         {
@@ -65,14 +67,19 @@ namespace DirigibleBattle
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
             glControl.Start(settings);
             glControl.InvalidateVisual();
-            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Texture2D); 
+            GL.Enable(EnableCap.Blend); // для отключения фона у ассетов
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-            firstDirigibleTexture = CreateTexture.LoadTexture("dirigible.png");
-            firstDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_left.png");
-            secondDirigibleTexture = CreateTexture.LoadTexture("dirigible_left.png");
+            GL.Viewport(0, 0, (int)glControl.Width, (int)glControl.Height);
+
+            firstDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_red_right_side.png");
+            firstDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_red_left_side.png");
+            secondDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_blue_left_side.png"); 
+            secondDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_blue_right_side.png");
             commonBulletTexture = CreateTexture.LoadTexture("CommonPulya.png");
-            firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTexture);
-            secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTexture);
+            firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTextureRight);
+            secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTextureLeft);
             firstPlayerAmmo = new List<Bullet>();
             secondPlayerAmmo = new List<Bullet>();
             screenBorderCollider = new RectangleF(0.0f, 0.125f, 1.0f, 0.875f);
@@ -102,13 +109,13 @@ namespace DirigibleBattle
             if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || !firstPlayer.IsAlive())
             {
                 timer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
             {
                 timer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             for (int i = 0; i < firstPlayerAmmo.Count; i++)
@@ -238,13 +245,14 @@ namespace DirigibleBattle
             {
                 firstPlayer.dirigibleID = firstDirigibleTextureLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
-                firstPlayerAmmo[0].Direction(-0.5f,0f);
+               
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.D))
             {
-                firstPlayer.dirigibleID = firstDirigibleTexture;
+                firstPlayer.dirigibleID = firstDirigibleTextureRight;
                 moveVectorFirstPlayer += new Vector2(0.001f, 0f);
+                
             }
             //=======================================================//
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Up))
@@ -259,13 +267,13 @@ namespace DirigibleBattle
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Left))
             {
-                secondPlayer.dirigibleID = firstDirigibleTextureLeft;
+                secondPlayer.dirigibleID = secondDirigibleTextureRight;
                 moveVectorSecondPlayer += new Vector2(-0.001f, 0f);
             }
 
             if (keyboardState.IsKeyDown(OpenTK.Input.Key.Right))
             {
-                secondPlayer.dirigibleID = firstDirigibleTexture;
+                secondPlayer.dirigibleID = secondDirigibleTextureLeft;
                 moveVectorSecondPlayer += new Vector2(0.001f, 0f);
             }
             // Нормализует передвижение 

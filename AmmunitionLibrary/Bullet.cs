@@ -10,6 +10,7 @@ namespace AmmunitionLibrary
 {
     public abstract class Bullet
     {
+        
         public Vector2 PositionCenter;
         protected int TextureID { get; set; }
         public int Speed { get; set; }
@@ -18,7 +19,7 @@ namespace AmmunitionLibrary
         public abstract RectangleF GetCollider();
         public abstract void Fire();
 
-        public abstract Vector2 Direction(float x, float y);
+       
 
     }
 }

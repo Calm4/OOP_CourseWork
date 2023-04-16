@@ -11,7 +11,7 @@ namespace AmmunitionLibrary
 {
     public class CommonBullet : Bullet
     {
-        public CommonBullet(Vector2 startPosition,int textureID)
+        public CommonBullet(Vector2 startPosition, int textureID)
         {
             PositionCenter = startPosition;
             TextureID = textureID;
@@ -31,17 +31,17 @@ namespace AmmunitionLibrary
                 PositionCenter + new Vector2(-0.03f, 0.015f),
             };
         }
-        public override Vector2 Direction(float x, float y)
-        {
-            return new Vector2(x,y);
-        }
+
         public override void Fire()
         {
-            PositionCenter += Direction(0.025f,0f);
+            if (true)
+                PositionCenter += new Vector2(0.025f, 0f);
+            else
+                PositionCenter += new Vector2(-0.025f, 0f);
         }
         public override RectangleF GetCollider()
         {
-            Vector2[] colliderPosition = GetPosition(); 
+            Vector2[] colliderPosition = GetPosition();
 
             float colliderWidth = (colliderPosition[2].X - colliderPosition[3].X) / 2.0f;
             float colliderHeight = (colliderPosition[3].Y - colliderPosition[0].Y) / 2.0f;
@@ -54,8 +54,8 @@ namespace AmmunitionLibrary
         }
         private static float[] Convert(float pointX, float pointY)
         {
-            float centralPointX = 0.5f; 
-            float centralPointY = 0.5f; 
+            float centralPointX = 0.5f;
+            float centralPointY = 0.5f;
 
             float[] resultPoint = new float[2];
 
