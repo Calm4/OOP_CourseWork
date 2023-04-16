@@ -5,19 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameLibrary.Dirigible;
+using PrizesLibrary;
 using OpenTK;
+using System.Drawing;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class HealthPrize : Prize
+    public abstract class Prize
     {
-        public HealthPrize()
-        {
+        Vector2 centerPosition;
+        int textureID;
+        public abstract void UsePrize(AbstractDirigible dirigible);
             
-        }
-        public override void UsePrize(AbstractDirigible dirigible)
-        {
-            dirigible.GetHealth();
-        }
     }
 }

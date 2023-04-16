@@ -59,16 +59,16 @@ namespace DirigibleBattle
         int secondDirigibleTextureRight;
         int secondDirigibleTextureLeft;
 
-        List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
+        readonly List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
             {
                 OpenTK.Input.Key.W,
                 OpenTK.Input.Key.S,
                 OpenTK.Input.Key.A,
                 OpenTK.Input.Key.D,
             };
-        List<OpenTK.Input.Key> secondPlayerInput = new List<OpenTK.Input.Key>()
+        readonly List<OpenTK.Input.Key> secondPlayerInput = new List<OpenTK.Input.Key>()
             {
-                  OpenTK.Input.Key.Up,
+                OpenTK.Input.Key.Up,
                 OpenTK.Input.Key.Down,
                 OpenTK.Input.Key.Left,
                 OpenTK.Input.Key.Right,
@@ -113,7 +113,7 @@ namespace DirigibleBattle
         private void StartTimer()
         {
             gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) }; // ~100 FPS
-            gameTimer.Tick += Timer_Tick;
+            gameTimer.Tick += GameTimer_Tick;
             gameTimer.Start();
         }
 
@@ -178,7 +178,7 @@ namespace DirigibleBattle
 
 
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void GameTimer_Tick(object sender, EventArgs e)
         {
             GameRender();
             ShootControl();
@@ -251,6 +251,6 @@ namespace DirigibleBattle
             wasSecondPlayerFirePressed = secondPlayerFire;
         }
 
-        
+
     }
 }

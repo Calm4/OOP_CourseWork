@@ -8,9 +8,9 @@ using GameLibrary.Dirigible;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class SpeedBoostPrize : IPrize
+    internal class SpeedBoostPrize : Prize
     {
-        public void UsePrize(AbstractDirigible dirigible)
+        public override void UsePrize(AbstractDirigible dirigible)
         {
             dirigible.GetSpeed();
         }

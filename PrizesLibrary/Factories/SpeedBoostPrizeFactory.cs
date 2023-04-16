@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    internal class SpeedBoostPrizeFactory : IPrizeFactory
+    internal class SpeedBoostPrizeFactory : PrizeFactory
     {
-        public IPrize CreatePrize()
+        public override Prize CreatePrize()
         {
             return new SpeedBoostPrize();
         }

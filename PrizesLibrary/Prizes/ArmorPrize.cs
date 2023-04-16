@@ -8,9 +8,9 @@ using GameLibrary.Dirigible;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class ArmorPrize : IPrize
+    internal class ArmorPrize : Prize
     {
-        public void UsePrize(AbstractDirigible dirigible)
+        public override void UsePrize(AbstractDirigible dirigible)
         {
             dirigible.GetArmor();
         }

@@ -1,4 +1,5 @@
-﻿using PrizesLibrary.Prizes;
+﻿using OpenTK;
+using PrizesLibrary.Prizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    internal class HealthPrizeFactory : IPrizeFactory
+    internal class HealthPrizeFactory : PrizeFactory
     {
-        public IPrize CreatePrize()
+        public override Prize CreatePrize()
         {
             return new HealthPrize();
         }

@@ -15,15 +15,15 @@ namespace GameLibrary.Dirigible
         public BasicDirigible(Vector2 startPosition, int textrureID)
         {
             PositionCenter = startPosition;
-            dirigibleID = textrureID;
+            DirigibleID = textrureID;
             this.PassiveSpeed = new Vector2(0, 0.001f);
 
         }
         public Vector2 PassiveSpeed { get; set; }
         public Vector2 PositionCenter;
         
-        public int dirigibleID { get; set; }
-        public bool isMove { get; set; }
+        public int DirigibleID { get; set; }
+        public bool IsMove { get; set; }
         public int Health { get; set; } = 100;
         public int Armor { get; set; } = 100;
         public int Ammo { get; set; } = 30;
@@ -53,14 +53,14 @@ namespace GameLibrary.Dirigible
             if (keyboardState.IsKeyDown(keys[2]))
             {
                 Debug.WriteLine("A");
-                dirigibleID = textureIdLeft;
+                DirigibleID = textureIdLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
             if (keyboardState.IsKeyDown(keys[3]))
             {
                 Debug.WriteLine("D");
-                dirigibleID = textureIdRight;
+                DirigibleID = textureIdRight;
                 moveVectorFirstPlayer += new Vector2(0.001f, 0f);
 
             }
@@ -99,16 +99,16 @@ namespace GameLibrary.Dirigible
         }
         public override void Idle()
         {
-            isMove = true;
+            IsMove = true;
 
             PositionCenter += PassiveSpeed;
 
-            isMove = false;
+            IsMove = false;
         }
 
         public override void Move(Vector2 movement)
         {
-            if (isMove || Fuel <= 0)
+            if (IsMove || Fuel <= 0)
                 return;
             PositionCenter += movement;
             Fuel--;
@@ -116,7 +116,7 @@ namespace GameLibrary.Dirigible
         }
         public void Render()
         {
-            ObjectRenderer.RenderObjects(dirigibleID, GetPosition());
+            ObjectRenderer.RenderObjects(DirigibleID, GetPosition());
         }
         private Vector2[] GetPosition()
         {
