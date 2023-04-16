@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GameLibrary.Dirigible;
 using OpenTK;
+using OpenTK.Input;
 
 namespace GameLibrary.DirigibleDecorators
 {
@@ -32,14 +33,14 @@ namespace GameLibrary.DirigibleDecorators
             return _dirigible.GetAmmo();
         }
 
-        public override Vector2 GetSpeed()
+        public override float GetSpeed()
         {
             return _dirigible.GetSpeed();
         }
 
-        public override void Controls()
+        public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
-            _dirigible.Controls();
+           _dirigible.Controls(keys,textureIdLeft,textureIdRight);
         }
 
         public override bool IsAlive()

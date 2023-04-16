@@ -11,11 +11,11 @@ namespace AmmunitionLibrary
 {
     public class CommonBullet : Bullet
     {
-        public CommonBullet(Vector2 startPosition, int textureID)
+        public CommonBullet(Vector2 startPosition, int textureID,bool direction)
         {
             PositionCenter = startPosition;
             TextureID = textureID;
-
+            Direction = direction;
         }
         public override void Render()
         {
@@ -34,10 +34,9 @@ namespace AmmunitionLibrary
 
         public override void Fire()
         {
-            if (true)
+           
                 PositionCenter += new Vector2(0.025f, 0f);
-            else
-                PositionCenter += new Vector2(-0.025f, 0f);
+           
         }
         public override RectangleF GetCollider()
         {

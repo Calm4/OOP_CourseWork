@@ -10,7 +10,7 @@ namespace AmmunitionLibrary
 {
     public abstract class Bullet
     {
-        
+        public bool Direction;
         public Vector2 PositionCenter;
         protected int TextureID { get; set; }
         public int Speed { get; set; }

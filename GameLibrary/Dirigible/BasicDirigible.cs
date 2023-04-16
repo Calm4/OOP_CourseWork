@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,26 +12,65 @@ namespace GameLibrary.Dirigible
 {
     public class BasicDirigible : AbstractDirigible
     {
-        public BasicDirigible(Vector2 startPosition, int textrure)
+        public BasicDirigible(Vector2 startPosition, int textrureID)
         {
             PositionCenter = startPosition;
-            dirigibleID = textrure;
-            this.Speed = new Vector2(0, 0.001f);
+            dirigibleID = textrureID;
+            this.PassiveSpeed = new Vector2(0, 0.001f);
 
         }
-        public Vector2 Speed { get; set; }
+        public Vector2 PassiveSpeed { get; set; }
         public Vector2 PositionCenter;
+        
         public int dirigibleID { get; set; }
         public bool isMove { get; set; }
         public int Health { get; set; } = 100;
         public int Armor { get; set; } = 100;
         public int Ammo { get; set; } = 30;
-        public int Fuel { get; set; } = 5500;
+        public float ActiveSpeed { get; set; } = 0.01f;
+        public int Fuel { get; set; } = 5000;
 
-        public override void Controls()
+
+        public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
-            throw new NotImplementedException();
+            // W S A D
+            // Вверх Низ Лево Право
+            KeyboardState keyboardState = Keyboard.GetState();
+            Vector2 moveVectorFirstPlayer = Vector2.Zero;
+
+            if (keyboardState.IsKeyDown(keys[0]))
+            {
+                Debug.WriteLine("W");
+                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
+
+            }
+            if (keyboardState.IsKeyDown(keys[1]))
+            {
+                Debug.WriteLine("S");
+                moveVectorFirstPlayer += new Vector2(0f, 0.001f);
+            }
+
+            if (keyboardState.IsKeyDown(keys[2]))
+            {
+                Debug.WriteLine("A");
+                dirigibleID = textureIdLeft;
+                moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
+            }
+
+            if (keyboardState.IsKeyDown(keys[3]))
+            {
+                Debug.WriteLine("D");
+                dirigibleID = textureIdRight;
+                moveVectorFirstPlayer += new Vector2(0.001f, 0f);
+
+            }
+            if (moveVectorFirstPlayer != Vector2.Zero)
+            {
+                moveVectorFirstPlayer = Vector2.Normalize(moveVectorFirstPlayer) * GetSpeed();
+            }
+            Move(moveVectorFirstPlayer);
         }
+        
 
         public override int GetAmmo()
         {
@@ -47,9 +87,9 @@ namespace GameLibrary.Dirigible
             return Health;
         }
 
-        public override Vector2 GetSpeed()
+        public override float GetSpeed()
         {
-            return Speed;
+            return ActiveSpeed;
         }
 
 
@@ -61,7 +101,7 @@ namespace GameLibrary.Dirigible
         {
             isMove = true;
 
-            PositionCenter += Speed;
+            PositionCenter += PassiveSpeed;
 
             isMove = false;
         }
@@ -73,7 +113,6 @@ namespace GameLibrary.Dirigible
             PositionCenter += movement;
             Fuel--;
 
-            Debug.WriteLine("Fuel is " + Fuel);
         }
         public void Render()
         {
@@ -92,21 +131,21 @@ namespace GameLibrary.Dirigible
 
         public RectangleF GetCollider()
         {
-            Vector2[] colliderPosition = GetPosition(); // добавить более точную коллизию!
+            Vector2[] colliderPosition = GetPosition();
 
             float colliderWidth = (colliderPosition[2].X - colliderPosition[3].X) / 2.0f;
             float colliderHeight = (colliderPosition[3].Y - colliderPosition[0].Y) / 2.0f;
 
             float[] convertedLeftTop = Convert(colliderPosition[3].X, colliderPosition[3].Y);
 
-            RectangleF collider = new RectangleF(convertedLeftTop[0], convertedLeftTop[1], colliderWidth, colliderHeight);
+            RectangleF collider = new RectangleF(convertedLeftTop[0], convertedLeftTop[1], colliderWidth - 0.005f, colliderHeight - 0.03f);
 
             return collider;
         }
         private static float[] Convert(float pointX, float pointY)
         {
-            float centralPointX = 0.5f; 
-            float centralPointY = 0.5f; 
+            float centralPointX = 0.5f;
+            float centralPointY = 0.5f;
 
             float[] resultPoint = new float[2];
 

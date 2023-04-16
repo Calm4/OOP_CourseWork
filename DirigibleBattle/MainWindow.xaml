@@ -8,6 +8,8 @@
         mc:Ignorable="d"
         Title="Dirigible Battle" Height="600" Width="800" Icon="/icon.png">
     <Grid x:Name="GameWindowGrid">
-        <glWpfControl:GLWpfControl x:Name="glControl" Loaded="glControl_Loaded" Render="glControl_Render"/>
+        <glWpfControl:GLWpfControl x:Name="glControl" Render="glControl_Render"/>
+       
+
     </Grid>
 </Window>

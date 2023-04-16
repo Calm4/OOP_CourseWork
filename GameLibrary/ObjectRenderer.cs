@@ -14,6 +14,8 @@ namespace GameLibrary
     {
         public static void RenderObjects(int textureID, Vector2[] objectPosition)
         {
+            Begin();
+
             Vector2[] vertices = new Vector2[4]
             {
                 new Vector2(0,0),// ┌ лево верх 
@@ -34,13 +36,13 @@ namespace GameLibrary
 
             GL.End();
         }
-        public static void Begin(int screenWidth, int screenHeight)
+        private static void Begin()
         {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
 
             // лево право низ верх z-вблизи z-вдали
-            GL.Ortho(-1f, 1f, 1f, -1f, -1f, 1f);
+            GL.Ortho(-1f, 1f, 1f, -1f, 0f, 1f);
 
 
             GL.MatrixMode(MatrixMode.Modelview);

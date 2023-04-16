@@ -44,7 +44,7 @@ namespace DirigibleBattle
         bool wasFirstPlayerFirePressed = false;
         bool wasSecondPlayerFirePressed = false;
 
-        DispatcherTimer timer;
+        DispatcherTimer gameTimer;
         RectangleF mountineCollider;
         RectangleF screenBorderCollider;
         KeyboardState keyboardState;
@@ -58,39 +58,63 @@ namespace DirigibleBattle
         int firstDirigibleTextureLeft;
         int secondDirigibleTextureRight;
         int secondDirigibleTextureLeft;
-       
+
+        List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
+            {
+                OpenTK.Input.Key.W,
+                OpenTK.Input.Key.S,
+                OpenTK.Input.Key.A,
+                OpenTK.Input.Key.D,
+            };
+        List<OpenTK.Input.Key> secondPlayerInput = new List<OpenTK.Input.Key>()
+            {
+                  OpenTK.Input.Key.Up,
+                OpenTK.Input.Key.Down,
+                OpenTK.Input.Key.Left,
+                OpenTK.Input.Key.Right,
+            };
+
 
         public MainWindow()
         {
-
             InitializeComponent();
+            GameSettings();
+            AddTexture();
+            AddObjects();
+            StartTimer();
+        }
+        private void GameSettings()
+        {
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
             glControl.Start(settings);
             glControl.InvalidateVisual();
-            GL.Enable(EnableCap.Texture2D); 
-            GL.Enable(EnableCap.Blend); // для отключения фона у ассетов
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
-            GL.Viewport(0, 0, (int)glControl.Width, (int)glControl.Height);
-
+        }
+        private void AddTexture()
+        {
             firstDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_red_right_side.png");
             firstDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_red_left_side.png");
-            secondDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_blue_left_side.png"); 
-            secondDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_blue_right_side.png");
+            secondDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_blue_right_side.png");
+            secondDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_blue_left_side.png");
             commonBulletTexture = CreateTexture.LoadTexture("CommonPulya.png");
+            backGroundTexture = CreateTexture.LoadTexture("sky.png");
+            mountainRange = CreateTexture.LoadTexture("mountine.png");
+        }
+        private void AddObjects()
+        {
             firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTextureRight);
             secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTextureLeft);
             firstPlayerAmmo = new List<Bullet>();
             secondPlayerAmmo = new List<Bullet>();
             screenBorderCollider = new RectangleF(0.0f, 0.125f, 1.0f, 0.875f);
-
-
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(10.0); // ~100 FPS
-            timer.Tick += Timer_Tick;
-            timer.Start();
-
-
+        }
+        private void StartTimer()
+        {
+            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) }; // ~100 FPS
+            gameTimer.Tick += Timer_Tick;
+            gameTimer.Start();
         }
 
         private void GameRender()
@@ -100,7 +124,7 @@ namespace DirigibleBattle
 
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
             {
-                timer.Stop();
+                gameTimer.Stop();
 
                 MessageBox.Show("НИЧЬЯ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
@@ -108,13 +132,13 @@ namespace DirigibleBattle
 
             if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || !firstPlayer.IsAlive())
             {
-                timer.Stop();
+                gameTimer.Stop();
                 MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
             {
-                timer.Stop();
+                gameTimer.Stop();
                 MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
@@ -134,7 +158,6 @@ namespace DirigibleBattle
                     firstPlayerAmmo.RemoveAt(i);
                 }
             }
-            Debug.WriteLine($"first Ammos: {firstPlayerAmmo.Count}");
 
             for (int i = 0; i < secondPlayerAmmo.Count; i++)
             {
@@ -151,8 +174,6 @@ namespace DirigibleBattle
                 }
             }
 
-
-            Debug.WriteLine($"second Ammos: {secondPlayerAmmo.Count}");
         }
 
 
@@ -160,28 +181,17 @@ namespace DirigibleBattle
         private void Timer_Tick(object sender, EventArgs e)
         {
             GameRender();
-            InputControl();
+            ShootControl();
+
+            firstPlayer.Controls(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
+            secondPlayer.Controls(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
 
             glControl.InvalidateVisual();
-        }
-
-        private void glControl_Loaded(object sender, RoutedEventArgs e)
-        {
-
-            backGroundTexture = CreateTexture.LoadTexture("sky.png");
-            mountainRange = CreateTexture.LoadTexture("mountine.png");
-
         }
 
         private void glControl_Render(TimeSpan obj)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(Color4.BlanchedAlmond);
-
-            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
-
-
-            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
             ObjectRenderer.RenderObjects(backGroundTexture, new Vector2[4] {
                 new Vector2(-1.0f, -1.0f),
@@ -189,8 +199,6 @@ namespace DirigibleBattle
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1.0f),
             });
-
-            ObjectRenderer.Begin((int)this.Width, (int)this.Height);
 
             ObjectRenderer.RenderObjects(mountainRange, new Vector2[4] {
                 new Vector2(-1.0f, 0.8f),
@@ -217,90 +225,32 @@ namespace DirigibleBattle
         }
 
 
-        public void InputControl()
+        public void ShootControl()
         {
-
+            // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
             keyboardState = OpenTK.Input.Keyboard.GetState();
-            Vector2 moveVectorFirstPlayer = Vector2.Zero;
-            Vector2 moveVectorSecondPlayer = Vector2.Zero;
-            //firstPlayer.Move(new Vector2(0f, -0.01f)); Вдруг понадобится
-            float firstPlayerSpeed = 0.01f, secondPlayerSpeed = 0.01f;
 
             bool firstPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
             bool secondPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Enter);
 
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.W))
-            {
 
-                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
-                
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.S))
-            {
-                moveVectorFirstPlayer += new Vector2(0f, 0.001f);
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.A))
-            {
-                firstPlayer.dirigibleID = firstDirigibleTextureLeft;
-                moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
-               
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.D))
-            {
-                firstPlayer.dirigibleID = firstDirigibleTextureRight;
-                moveVectorFirstPlayer += new Vector2(0.001f, 0f);
-                
-            }
-            //=======================================================//
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Up))
-            {
-                moveVectorSecondPlayer += new Vector2(0f, -0.001f);
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Down))
-            {
-                moveVectorSecondPlayer += new Vector2(0f, 0.001f);
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Left))
-            {
-                secondPlayer.dirigibleID = secondDirigibleTextureRight;
-                moveVectorSecondPlayer += new Vector2(-0.001f, 0f);
-            }
-
-            if (keyboardState.IsKeyDown(OpenTK.Input.Key.Right))
-            {
-                secondPlayer.dirigibleID = secondDirigibleTextureLeft;
-                moveVectorSecondPlayer += new Vector2(0.001f, 0f);
-            }
-            // Нормализует передвижение 
-            if (moveVectorFirstPlayer != Vector2.Zero)
-            {
-                moveVectorFirstPlayer = Vector2.Normalize(moveVectorFirstPlayer) * firstPlayerSpeed;
-            }
-            if (moveVectorSecondPlayer != Vector2.Zero)
-            {
-                moveVectorSecondPlayer = Vector2.Normalize(moveVectorSecondPlayer) * secondPlayerSpeed;
-            }
             //============================Точечная стрельба(без спама)============================//
             if (!wasFirstPlayerFirePressed && firstPlayerFire)
             {
-                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(-0.05f, -0.05f), commonBulletTexture));
+
+                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(0f, -0.05f), commonBulletTexture, true));
             }
             if (!wasSecondPlayerFirePressed && secondPlayerFire)
             {
-                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.PositionCenter - new Vector2(-0.05f, -0.05f), commonBulletTexture));
+
+                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.PositionCenter - new Vector2(-0f, -0.05f), commonBulletTexture, false));
             }
-            firstPlayer.Move(moveVectorFirstPlayer);
-            secondPlayer.Move(moveVectorSecondPlayer);
+
 
             wasFirstPlayerFirePressed = firstPlayerFire;
             wasSecondPlayerFirePressed = secondPlayerFire;
         }
 
-
+        
     }
 }
