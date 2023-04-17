@@ -5,14 +5,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameLibrary.Dirigible;
+using OpenTK;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class AmmoPrize : Prize
+    public class AmmoPrize : Prize
     {
-        public override void UsePrize(AbstractDirigible dirigible)
+        public AmmoPrize(int textureID, Vector2 centerPosition)
         {
-            dirigible.GetAmmo();
+            this.textureID = textureID;
+            this.centerPosition = centerPosition;
         }
     }
 }

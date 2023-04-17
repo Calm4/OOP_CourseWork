@@ -21,7 +21,7 @@ namespace GameLibrary.Dirigible
         }
         public Vector2 PassiveSpeed { get; set; }
         public Vector2 PositionCenter;
-        
+
         public int DirigibleID { get; set; }
         public bool IsMove { get; set; }
         public int Health { get; set; } = 100;
@@ -40,26 +40,22 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[0]))
             {
-                Debug.WriteLine("W");
                 moveVectorFirstPlayer += new Vector2(0f, -0.001f);
 
             }
             if (keyboardState.IsKeyDown(keys[1]))
             {
-                Debug.WriteLine("S");
                 moveVectorFirstPlayer += new Vector2(0f, 0.001f);
             }
 
             if (keyboardState.IsKeyDown(keys[2]))
             {
-                Debug.WriteLine("A");
                 DirigibleID = textureIdLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
             if (keyboardState.IsKeyDown(keys[3]))
             {
-                Debug.WriteLine("D");
                 DirigibleID = textureIdRight;
                 moveVectorFirstPlayer += new Vector2(0.001f, 0f);
 
@@ -70,7 +66,7 @@ namespace GameLibrary.Dirigible
             }
             Move(moveVectorFirstPlayer);
         }
-        
+
 
         public override int GetAmmo()
         {

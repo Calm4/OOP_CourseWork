@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    internal class ArmorPrizeFactory : PrizeFactory
+    public class ArmorPrizeFactory : PrizeFactory
     {
-        public override Prize CreatePrize()
+        public override Prize CreatePrize(int textureID, Vector2 centerPosition)
         {
-            return new ArmorPrize();
+            return new ArmorPrize(textureID, centerPosition);
         }
     }
 }

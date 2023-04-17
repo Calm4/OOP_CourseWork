@@ -1,4 +1,6 @@
-﻿using OpenTK;
+﻿using GameLibrary.Dirigible;
+using GameLibrary.DirigibleDecorators;
+using OpenTK;
 using PrizesLibrary.Prizes;
 using System;
 using System.Collections.Generic;
@@ -8,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    internal class HealthPrizeFactory : PrizeFactory
+    public class HealthPrizeFactory : PrizeFactory
     {
-        public override Prize CreatePrize()
+        public override Prize CreatePrize(int textureID,Vector2 centerPosition)
         {
-            return new HealthPrize();
+            return new HealthPrize(textureID,centerPosition);
         }
     }
 }

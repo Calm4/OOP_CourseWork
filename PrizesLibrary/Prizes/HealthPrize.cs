@@ -6,18 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using GameLibrary.Dirigible;
 using OpenTK;
+using System.Drawing;
+using OpenTK.Graphics.ES10;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class HealthPrize : Prize
+    public class HealthPrize : Prize
     {
-        public HealthPrize()
+        public HealthPrize(int textureID,Vector2 centerPosition)
         {
-            
+            this.textureID = textureID;
+            this.centerPosition = centerPosition;
         }
-        public override void UsePrize(AbstractDirigible dirigible)
-        {
-            dirigible.GetHealth();
-        }
+        
+       
+
     }
 }

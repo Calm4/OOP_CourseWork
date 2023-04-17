@@ -14,8 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OpenTK;
 using OpenTK.Graphics;
-using GameLibrary;
-using GameLibrary.DirigibleDecorators;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using OpenTK.Wpf;
@@ -23,9 +21,13 @@ using System.Security.Policy;
 using System.Drawing;
 using System.Windows.Threading;
 using System.Diagnostics;
-using GameLibrary.Dirigible;
 using AmmunitionLibrary;
-
+using GameLibrary;
+using GameLibrary.DirigibleDecorators;
+using GameLibrary.Dirigible;
+using PrizesLibrary.Factories;
+using PrizesLibrary.Prizes;
+using PrizesLibrary;
 
 
 namespace DirigibleBattle
@@ -45,6 +47,10 @@ namespace DirigibleBattle
         bool wasSecondPlayerFirePressed = false;
 
         DispatcherTimer gameTimer;
+        DispatcherTimer prizeTimer;
+        PrizeFactory prizeFactory;
+        List<Prize> prizeList = new List<Prize>();
+
         RectangleF mountineCollider;
         RectangleF screenBorderCollider;
         KeyboardState keyboardState;
@@ -58,6 +64,11 @@ namespace DirigibleBattle
         int firstDirigibleTextureLeft;
         int secondDirigibleTextureRight;
         int secondDirigibleTextureLeft;
+        int ammoPrizeTexture;
+        int armorPrizeTexture;
+        int fuelPrizeTexture;
+        int healthPrizeTexture;
+        int speedPrizeTexture;
 
         readonly List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
             {
@@ -82,6 +93,15 @@ namespace DirigibleBattle
             AddTexture();
             AddObjects();
             StartTimer();
+            AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
+            Debug.WriteLine(bd.GetHealth());
+            Debug.WriteLine(bd.GetArmor());
+            bd = new HealthBoostDecorator(bd);
+            Debug.WriteLine(bd.GetHealth());
+            bd = new ArmorBoostDecorator(bd);
+            Debug.WriteLine(bd.GetArmor());
+
+
         }
         private void GameSettings()
         {
@@ -114,7 +134,76 @@ namespace DirigibleBattle
         {
             gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) }; // ~100 FPS
             gameTimer.Tick += GameTimer_Tick;
+
+            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) };
+            prizeTimer.Tick += PrizeTimer_Tick;
+
             gameTimer.Start();
+            prizeTimer.Start();
+        }
+
+
+        private void PrizeTimer_Tick(object sender, EventArgs e)
+        {
+            PrizeGenerate();
+
+        }
+        private void PrizeGenerate()
+        {
+
+            Random random = new Random();
+
+
+            float randomPosX = 1, randomPosY = 1;
+
+            if (prizeList.Count < 11)
+            {
+                int prizeNumber = random.Next(0, 5);
+                randomPosX = (float)(random.NextDouble() * 2 - 1); // -1 до 1
+                randomPosY = (float)(random.NextDouble() * 2 - 1); // -1 до 1
+                switch (prizeNumber)
+                {
+
+                    case 0:
+
+                        prizeFactory = new AmmoPrizeFactory();
+                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        break;
+                    case 1:
+                        prizeFactory = new ArmorPrizeFactory();
+                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        break;
+                    case 2:
+                        prizeFactory = new HealthPrizeFactory();
+                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        break;
+                    case 3:
+                        prizeFactory = new SpeedBoostPrizeFactory();
+                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        break;
+                    case 4:
+                        prizeFactory = new ();
+                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        break;
+                    default:
+                        break;
+                }
+                               
+            }
+            else
+            {
+                return;
+            }
+        }
+        private void GameTimer_Tick(object sender, EventArgs e)
+        {
+            GameRender();
+            ShootControl();
+
+            firstPlayer.Controls(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
+            secondPlayer.Controls(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
+
+            glControl.InvalidateVisual();
         }
 
         private void GameRender()
@@ -133,13 +222,16 @@ namespace DirigibleBattle
             if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || !firstPlayer.IsAlive())
             {
                 gameTimer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
+
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
             {
                 gameTimer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
+                                    MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             for (int i = 0; i < firstPlayerAmmo.Count; i++)
@@ -176,19 +268,6 @@ namespace DirigibleBattle
 
         }
 
-
-
-        private void GameTimer_Tick(object sender, EventArgs e)
-        {
-            GameRender();
-            ShootControl();
-
-            firstPlayer.Controls(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
-            secondPlayer.Controls(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
-
-            glControl.InvalidateVisual();
-        }
-
         private void glControl_Render(TimeSpan obj)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -221,7 +300,10 @@ namespace DirigibleBattle
                 bullet.Render();
             }
 
-
+            foreach (Prize prize in prizeList)
+            {
+                prize.Render();
+            }
         }
 
 
@@ -229,6 +311,26 @@ namespace DirigibleBattle
         {
             // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
             keyboardState = OpenTK.Input.Keyboard.GetState();
+            bool direction = false;
+
+            if (firstPlayer.DirigibleID == firstDirigibleTextureLeft)
+            {
+                direction = false;
+            }
+            else
+            {
+                direction = true;
+            }
+
+            if (secondPlayer.DirigibleID == secondDirigibleTextureLeft)
+            {
+                direction = false;
+            }
+            else
+            {
+                direction = true;
+            }
+
 
             bool firstPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
             bool secondPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Enter);
@@ -237,13 +339,12 @@ namespace DirigibleBattle
             //============================Точечная стрельба(без спама)============================//
             if (!wasFirstPlayerFirePressed && firstPlayerFire)
             {
-
-                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(0f, -0.05f), commonBulletTexture, true));
+                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(0f, -0.05f), commonBulletTexture, direction));
             }
             if (!wasSecondPlayerFirePressed && secondPlayerFire)
             {
 
-                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.PositionCenter - new Vector2(-0f, -0.05f), commonBulletTexture, false));
+                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.PositionCenter - new Vector2(-0f, -0.05f), commonBulletTexture, direction));
             }
 
 

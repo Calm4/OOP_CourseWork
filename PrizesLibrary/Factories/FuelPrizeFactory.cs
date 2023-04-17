@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    public class SpeedBoostPrizeFactory : PrizeFactory
+    public class FuelPrizeFactory : PrizeFactory
     {
         public override Prize CreatePrize(int textureID, Vector2 centerPosition)
         {
-            return new SpeedBoostPrize(textureID, centerPosition);
+            return new FuelPrize(textureID, centerPosition);
         }
     }
 }

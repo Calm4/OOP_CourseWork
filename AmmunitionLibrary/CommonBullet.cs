@@ -34,8 +34,16 @@ namespace AmmunitionLibrary
 
         public override void Fire()
         {
-           
+            if (Direction == true)
+            {
                 PositionCenter += new Vector2(0.025f, 0f);
+
+            }
+            else
+            {
+                PositionCenter += new Vector2(-0.025f, 0f);
+
+            }
            
         }
         public override RectangleF GetCollider()

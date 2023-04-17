@@ -1,4 +1,5 @@
-﻿using PrizesLibrary.Prizes;
+﻿using OpenTK;
+using PrizesLibrary.Prizes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PrizesLibrary.Factories
 {
-    internal class AmmoPrizeFactory : PrizeFactory
+    public class AmmoPrizeFactory : PrizeFactory
     {
-        public override Prize CreatePrize()
+        public override Prize CreatePrize(int textureID, Vector2 centerPosition)
         {
-            return new AmmoPrize();
+            return new AmmoPrize(textureID, centerPosition);
         }
     }
 }
