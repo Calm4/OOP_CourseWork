@@ -93,14 +93,15 @@ namespace DirigibleBattle
             AddTexture();
             AddObjects();
             StartTimer();
-            
+
             AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
             Debug.WriteLine(bd.GetHealth());
             Debug.WriteLine(bd.GetArmor());
             bd = new HealthBoostDecorator(bd);
-            Debug.WriteLine(bd.GetHealth());
-           
-            Debug.WriteLine(bd.GetArmor());
+            bd = new HealthBoostDecorator(bd);
+
+           // Debug.WriteLine(bd.GetHealth());
+
 
 
         }
@@ -165,13 +166,14 @@ namespace DirigibleBattle
             if (prizeList.Count < 11)
             {
                 int prizeNumber = random.Next(0, 5);
-                randomPosX = (float)(random.NextDouble() * 2 - 1); // -1 до 1
-                randomPosY = (float)(random.NextDouble() * 2 - 1); // -1 до 1
+                randomPosX = (float)(random.NextDouble() * 2 - 0.85); // -1 до 1
+                randomPosY = (float)(random.NextDouble() * 2 - 0.65); // -1 до 1
                 switch (prizeNumber)
                 {
                     case 0:
                         prizeFactory = new AmmoPrizeFactory();
                         prizeList.Add(prizeFactory.CreatePrize(ammoPrizeTexture, new Vector2(randomPosX, randomPosY)));
+
                         break;
                     case 1:
                         prizeFactory = new ArmorPrizeFactory();
@@ -203,10 +205,11 @@ namespace DirigibleBattle
             GameRender();
             ShootControl();
 
-            firstPlayer.Controls(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
-            secondPlayer.Controls(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
+            firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
+            secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
 
             glControl.InvalidateVisual();
+          //  Debug.WriteLine(firstPlayer.GetFuel());
         }
 
         private void GameRender()
@@ -226,8 +229,7 @@ namespace DirigibleBattle
             {
                 gameTimer.Stop();
                 MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
-
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                                        MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
@@ -246,7 +248,8 @@ namespace DirigibleBattle
                 if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
                 {
                     firstPlayerAmmo.RemoveAt(i);
-                    secondPlayer.Health -= 20;
+                    secondPlayer.GetDamage(40); //firstPlayerAmmo[i].Damage
+                    Debug.WriteLine(secondPlayer.GetHealth());
                 }
                 else if (!firstPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
                 {
@@ -261,7 +264,9 @@ namespace DirigibleBattle
                 if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
                 {
                     secondPlayerAmmo.RemoveAt(i);
-                    firstPlayer.Health -= 20;
+                    firstPlayer.GetDamage(40); //secondPlayerAmmo[i].Damage
+
+                    Debug.WriteLine(firstPlayer.GetHealth());
                 }
                 else if (!secondPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
                 {
@@ -269,33 +274,45 @@ namespace DirigibleBattle
                 }
             }
 
-            foreach (Prize prize in prizeList)
+            for (int i = 0; i < prizeList.Count; i++)
             {
+                Prize prize = prizeList[i];
+
                 if (firstPlayer.GetCollider().IntersectsWith(prize.GetCollider()))
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-                        HealthBoostDecorator healthBoostDecorator = new HealthBoostDecorator(firstPlayer);
-                       // firstPlayer
+                        firstPlayer = new AmmoBoostDecorator(firstPlayer);
+                        Debug.WriteLine("ammo:" + firstPlayer.GetAmmo());
+
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
-                       // firstPlayer = new ArmorBoostDecorator(firstPlayer);
+                        firstPlayer = new ArmorBoostDecorator(firstPlayer);
+                        Debug.WriteLine("arrmor:" + firstPlayer.GetArmor());
+
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
                     {
-                      //  firstPlayer = new FuelBoostDecorator(firstPlayer);
+                        firstPlayer = new FuelBoostDecorator(firstPlayer);
+                        Debug.WriteLine("fuel:" + firstPlayer.GetFuel());
+
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
                     {
+                        firstPlayer = new HealthBoostDecorator(firstPlayer);
+                        Debug.WriteLine("hp:" + firstPlayer.GetHealth());
 
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
+                        firstPlayer = new SpeedBoostDecorator(firstPlayer);
+                        Debug.WriteLine("hp:" + firstPlayer.GetSpeed());
 
                     }
+                    prizeList.Remove(prize);
+                    i--;
                 }
-                // Debug.WriteLine(prize.GetType());
             }
 
         }

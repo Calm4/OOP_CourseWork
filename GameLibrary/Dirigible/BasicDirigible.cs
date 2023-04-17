@@ -22,7 +22,7 @@ namespace GameLibrary.Dirigible
         public Vector2 PassiveSpeed { get; set; }
                       
 
-        public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
+        public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
             // W S A D
             // Вверх Низ Лево Право
@@ -57,7 +57,10 @@ namespace GameLibrary.Dirigible
             }
             Move(moveVectorFirstPlayer);
         }
-
+        public override void Shoot(List<Key> keys, int[] texture)
+        {
+            throw new NotImplementedException();
+        }
 
         public override int GetAmmo()
         {
@@ -72,7 +75,7 @@ namespace GameLibrary.Dirigible
         public override int GetHealth()
         {
             return Health;
-        }
+         }
 
         public override float GetSpeed()
         {
@@ -83,10 +86,14 @@ namespace GameLibrary.Dirigible
             return Fuel;
         }
 
-
+        public override void GetDamage(int damage)
+        {
+            Health -= damage;
+            
+        }
         public override bool IsAlive()
         {
-            return Health > 0 && Armor > 0;
+            return GetHealth() > 0;
         }
         public override void Idle()
         {

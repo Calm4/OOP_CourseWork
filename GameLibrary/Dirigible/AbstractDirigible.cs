@@ -22,11 +22,13 @@ namespace GameLibrary.Dirigible
         public float ActiveSpeed { get; set; } = 0.01f;
         public int Fuel { get; set; } = 5000;
         public abstract int GetHealth();
+        public abstract void GetDamage(int damage);
         public abstract float GetSpeed();
         public abstract int GetArmor();
         public abstract int GetAmmo();
         public abstract int GetFuel();
-        public abstract void Controls(List<Key> keys, int textureIdLeft, int textureIdRight);
+        public abstract void Control(List<Key> keys, int textureIdLeft, int textureIdRight);
+        public abstract void Shoot(List<Key> keys,int[] texture);
 
         public abstract bool IsAlive(); // Подумать над работой, вроде работает не правильно
 

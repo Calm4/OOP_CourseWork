@@ -10,7 +10,7 @@ namespace AmmunitionLibrary
 {
     public class HeavyBullet : Bullet
     {
-
+        public override int Damage { get; set; } = 30;
 
         public override void Fire()
         {

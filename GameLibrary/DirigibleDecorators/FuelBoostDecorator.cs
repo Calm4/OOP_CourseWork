@@ -19,5 +19,6 @@ namespace GameLibrary.DirigibleDecorators
         {
             return base.GetFuel() + getExtraFuel();
         }
+       
     }
 }

@@ -23,7 +23,12 @@ namespace GameLibrary.DirigibleDecorators
         {
             return _dirigible.GetHealth();
         }
-
+       
+        public override void GetDamage(int damage)
+        {
+            _dirigible.GetDamage(damage);
+            
+        }
         public override int GetArmor()
         {
             return _dirigible.GetArmor();
@@ -42,9 +47,14 @@ namespace GameLibrary.DirigibleDecorators
         {
             return _dirigible.GetFuel();
         }
-        public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
+        public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
-            _dirigible.Controls(keys, textureIdLeft, textureIdRight);
+            _dirigible.Control(keys, textureIdLeft, textureIdRight);
+        }
+
+        public override void Shoot(List<Key> keys, int[] texture)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool IsAlive()

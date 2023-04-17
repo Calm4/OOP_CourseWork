@@ -11,6 +11,7 @@ namespace AmmunitionLibrary
 {
     public class CommonBullet : Bullet
     {
+        public override int Damage { get; set; } = 20;
         public CommonBullet(Vector2 startPosition, int textureID,bool direction)
         {
             PositionCenter = startPosition;
@@ -25,10 +26,10 @@ namespace AmmunitionLibrary
         {
             return new Vector2[4]
             {
-                PositionCenter + new Vector2(-0.03f, -0.015f),
-                PositionCenter + new Vector2(0.03f, -0.015f),
-                PositionCenter + new Vector2(0.03f, 0.015f),
-                PositionCenter + new Vector2(-0.03f, 0.015f),
+                PositionCenter + new Vector2(-0.05f, -0.03f),
+                PositionCenter + new Vector2(0.05f, -0.03f),
+                PositionCenter + new Vector2(0.05f, 0.03f),
+                PositionCenter + new Vector2(-0.05f, 0.03f),
             };
         }
 

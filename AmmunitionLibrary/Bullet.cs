@@ -14,7 +14,7 @@ namespace AmmunitionLibrary
         public Vector2 PositionCenter;
         protected int TextureID { get; set; }
         public int Speed { get; set; }
-        public int Damage { get; set; }
+        public abstract int Damage { get; set; }
         public abstract void Render();
         public abstract RectangleF GetCollider();
         public abstract void Fire();

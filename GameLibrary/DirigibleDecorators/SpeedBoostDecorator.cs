@@ -11,8 +11,8 @@ namespace GameLibrary.DirigibleDecorators
     public class SpeedBoostDecorator : DirigibleDecorator
     {
         public SpeedBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
-        
-        public Vector2 GetExtraSpeed() { return new Vector2(); }
+
+        private Vector2 GetExtraSpeed() { return new Vector2(); }
 
         public override void Move(Vector2 movement)
         {
