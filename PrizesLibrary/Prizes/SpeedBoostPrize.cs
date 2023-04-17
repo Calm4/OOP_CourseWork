@@ -9,7 +9,7 @@ using OpenTK;
 
 namespace PrizesLibrary.Prizes
 {
-    internal class SpeedBoostPrize : Prize
+    public class SpeedBoostPrize : Prize
     {
         public SpeedBoostPrize(int textureID, Vector2 centerPosition)
         {

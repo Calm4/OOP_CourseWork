@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,10 +38,13 @@ namespace GameLibrary.DirigibleDecorators
         {
             return _dirigible.GetSpeed();
         }
-
+        public override int GetFuel()
+        {
+            return _dirigible.GetFuel();
+        }
         public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
-           _dirigible.Controls(keys,textureIdLeft,textureIdRight);
+            _dirigible.Controls(keys, textureIdLeft, textureIdRight);
         }
 
         public override bool IsAlive()
@@ -55,5 +59,36 @@ namespace GameLibrary.DirigibleDecorators
         {
             _dirigible.Move(movement);
         }
+        public override void Render()
+        {
+            _dirigible.Render();
+        }
+        public override RectangleF GetCollider()
+        {
+            return _dirigible.GetCollider();
+        }
+        protected override Vector2[] GetPosition()
+        {
+            return new Vector2[4]
+           {
+                PositionCenter + new Vector2(-0.1f, -0.1f),
+                PositionCenter + new Vector2(0.1f, -0.1f),
+                PositionCenter + new Vector2(0.1f, 0.1f),
+                PositionCenter + new Vector2(-0.1f, 0.1f),
+           };
+        }
+        protected override float[] Convert(float pointX, float pointY)
+        {
+            float centralPointX = 0.5f;
+            float centralPointY = 0.5f;
+
+            float[] resultPoint = new float[2];
+
+            resultPoint[0] = centralPointX + pointX / 2.0f;
+            resultPoint[1] = centralPointY - pointY / 2.0f;
+
+            return resultPoint;
+        }
+
     }
 }

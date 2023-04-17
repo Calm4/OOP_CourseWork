@@ -23,5 +23,6 @@ namespace GameLibrary.DirigibleDecorators
         {
             return base.IsAlive() && GetHealth() > 0;
         }
+       
     }
 }

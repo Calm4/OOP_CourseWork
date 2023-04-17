@@ -49,6 +49,7 @@
     <Compile Include="DirigibleDecorators\AmmoBoostDecorator.cs" />
     <Compile Include="DirigibleDecorators\ArmorBoostDecorator.cs" />
     <Compile Include="DirigibleDecorators\DirigibleDecorator.cs" />
+    <Compile Include="DirigibleDecorators\FuelBoostDecorator.cs" />
     <Compile Include="DirigibleDecorators\HealthBoostDecorator.cs" />
     <Compile Include="DirigibleDecorators\SpeedBoostDecorator.cs" />
     <Compile Include="Dirigible\AbstractDirigible.cs" />

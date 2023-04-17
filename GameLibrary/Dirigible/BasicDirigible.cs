@@ -20,16 +20,7 @@ namespace GameLibrary.Dirigible
 
         }
         public Vector2 PassiveSpeed { get; set; }
-        public Vector2 PositionCenter;
-
-        public int DirigibleID { get; set; }
-        public bool IsMove { get; set; }
-        public int Health { get; set; } = 100;
-        public int Armor { get; set; } = 100;
-        public int Ammo { get; set; } = 30;
-        public float ActiveSpeed { get; set; } = 0.01f;
-        public int Fuel { get; set; } = 5000;
-
+                      
 
         public override void Controls(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
@@ -87,6 +78,10 @@ namespace GameLibrary.Dirigible
         {
             return ActiveSpeed;
         }
+        public override int GetFuel()
+        {
+            return Fuel;
+        }
 
 
         public override bool IsAlive()
@@ -110,11 +105,11 @@ namespace GameLibrary.Dirigible
             Fuel--;
 
         }
-        public void Render()
+        public override void Render()
         {
             ObjectRenderer.RenderObjects(DirigibleID, GetPosition());
         }
-        private Vector2[] GetPosition()
+        protected override Vector2[] GetPosition()
         {
             return new Vector2[4]
            {
@@ -125,7 +120,7 @@ namespace GameLibrary.Dirigible
            };
         }
 
-        public RectangleF GetCollider()
+        public override RectangleF GetCollider()
         {
             Vector2[] colliderPosition = GetPosition();
 
@@ -138,7 +133,7 @@ namespace GameLibrary.Dirigible
 
             return collider;
         }
-        private static float[] Convert(float pointX, float pointY)
+        protected override float[] Convert(float pointX, float pointY)
         {
             float centralPointX = 0.5f;
             float centralPointY = 0.5f;

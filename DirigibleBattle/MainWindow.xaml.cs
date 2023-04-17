@@ -37,8 +37,8 @@ namespace DirigibleBattle
     /// </summary>
     public partial class MainWindow
     {
-        BasicDirigible firstPlayer;
-        BasicDirigible secondPlayer;
+        AbstractDirigible firstPlayer;
+        AbstractDirigible secondPlayer;
 
         List<Bullet> firstPlayerAmmo;
         List<Bullet> secondPlayerAmmo;
@@ -93,12 +93,13 @@ namespace DirigibleBattle
             AddTexture();
             AddObjects();
             StartTimer();
+            
             AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
             Debug.WriteLine(bd.GetHealth());
             Debug.WriteLine(bd.GetArmor());
             bd = new HealthBoostDecorator(bd);
             Debug.WriteLine(bd.GetHealth());
-            bd = new ArmorBoostDecorator(bd);
+           
             Debug.WriteLine(bd.GetArmor());
 
 
@@ -121,6 +122,11 @@ namespace DirigibleBattle
             commonBulletTexture = CreateTexture.LoadTexture("CommonPulya.png");
             backGroundTexture = CreateTexture.LoadTexture("sky.png");
             mountainRange = CreateTexture.LoadTexture("mountine.png");
+            ammoPrizeTexture = CreateTexture.LoadTexture("ammoPrize.png");
+            armorPrizeTexture = CreateTexture.LoadTexture("armorPrize.png");
+            fuelPrizeTexture = CreateTexture.LoadTexture("fuelPrize.png");
+            healthPrizeTexture = CreateTexture.LoadTexture("healthPrize.png");
+            speedPrizeTexture = CreateTexture.LoadTexture("speedPrize.png");
         }
         private void AddObjects()
         {
@@ -154,7 +160,7 @@ namespace DirigibleBattle
             Random random = new Random();
 
 
-            float randomPosX = 1, randomPosY = 1;
+            float randomPosX, randomPosY;
 
             if (prizeList.Count < 11)
             {
@@ -163,32 +169,29 @@ namespace DirigibleBattle
                 randomPosY = (float)(random.NextDouble() * 2 - 1); // -1 до 1
                 switch (prizeNumber)
                 {
-
                     case 0:
-
                         prizeFactory = new AmmoPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        prizeList.Add(prizeFactory.CreatePrize(ammoPrizeTexture, new Vector2(randomPosX, randomPosY)));
                         break;
                     case 1:
                         prizeFactory = new ArmorPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        prizeList.Add(prizeFactory.CreatePrize(armorPrizeTexture, new Vector2(randomPosX, randomPosY)));
                         break;
                     case 2:
                         prizeFactory = new HealthPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        prizeList.Add(prizeFactory.CreatePrize(healthPrizeTexture, new Vector2(randomPosX, randomPosY)));
                         break;
                     case 3:
                         prizeFactory = new SpeedBoostPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        prizeList.Add(prizeFactory.CreatePrize(speedPrizeTexture, new Vector2(randomPosX, randomPosY)));
                         break;
                     case 4:
-                        prizeFactory = new ();
-                        prizeList.Add(prizeFactory.CreatePrize(firstDirigibleTextureLeft, new Vector2(randomPosX, randomPosY)));
+                        prizeFactory = new FuelPrizeFactory();
+                        prizeList.Add(prizeFactory.CreatePrize(fuelPrizeTexture, new Vector2(randomPosX, randomPosY)));
                         break;
                     default:
                         break;
                 }
-                               
             }
             else
             {
@@ -264,6 +267,35 @@ namespace DirigibleBattle
                 {
                     secondPlayerAmmo.RemoveAt(i);
                 }
+            }
+
+            foreach (Prize prize in prizeList)
+            {
+                if (firstPlayer.GetCollider().IntersectsWith(prize.GetCollider()))
+                {
+                    if (prize.GetType().Equals(typeof(AmmoPrize)))
+                    {
+                        HealthBoostDecorator healthBoostDecorator = new HealthBoostDecorator(firstPlayer);
+                       // firstPlayer
+                    }
+                    if (prize.GetType().Equals(typeof(ArmorPrize)))
+                    {
+                       // firstPlayer = new ArmorBoostDecorator(firstPlayer);
+                    }
+                    if (prize.GetType().Equals(typeof(FuelPrize)))
+                    {
+                      //  firstPlayer = new FuelBoostDecorator(firstPlayer);
+                    }
+                    if (prize.GetType().Equals(typeof(HealthPrize)))
+                    {
+
+                    }
+                    if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
+                    {
+
+                    }
+                }
+                // Debug.WriteLine(prize.GetType());
             }
 
         }
