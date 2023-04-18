@@ -100,7 +100,7 @@ namespace DirigibleBattle
             bd = new HealthBoostDecorator(bd);
             bd = new HealthBoostDecorator(bd);
 
-           // Debug.WriteLine(bd.GetHealth());
+            // Debug.WriteLine(bd.GetHealth());
 
 
 
@@ -209,13 +209,13 @@ namespace DirigibleBattle
             secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
 
             glControl.InvalidateVisual();
-          //  Debug.WriteLine(firstPlayer.GetFuel());
+              Debug.WriteLine(firstPlayer.Fuel);
         }
 
         private void GameRender()
         {
-            firstPlayer.Idle();
-            secondPlayer.Idle();
+           // firstPlayer.Idle(); Подение, потом раскомментить 
+           // secondPlayer.Idle();
 
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
             {
@@ -225,14 +225,14 @@ namespace DirigibleBattle
                 Close();
             }
 
-            if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || !firstPlayer.IsAlive())
+            if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || firstPlayer.GetHealth() <= 0 )
             {
                 gameTimer.Stop();
                 MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
                                         MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
-            if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || !secondPlayer.IsAlive())
+            if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || secondPlayer.GetHealth() <= 0)
             {
                 gameTimer.Stop();
                 MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
@@ -264,6 +264,7 @@ namespace DirigibleBattle
                 if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
                 {
                     secondPlayerAmmo.RemoveAt(i);
+                    //  firstPlayer.GetHealth();
                     firstPlayer.GetDamage(40); //secondPlayerAmmo[i].Damage
 
                     Debug.WriteLine(firstPlayer.GetHealth());
@@ -283,6 +284,7 @@ namespace DirigibleBattle
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
                         firstPlayer = new AmmoBoostDecorator(firstPlayer);
+
                         Debug.WriteLine("ammo:" + firstPlayer.GetAmmo());
 
                     }

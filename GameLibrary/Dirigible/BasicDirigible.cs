@@ -18,9 +18,10 @@ namespace GameLibrary.Dirigible
             DirigibleID = textrureID;
             this.PassiveSpeed = new Vector2(0, 0.001f);
 
+
         }
         public Vector2 PassiveSpeed { get; set; }
-                      
+
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
@@ -75,7 +76,7 @@ namespace GameLibrary.Dirigible
         public override int GetHealth()
         {
             return Health;
-         }
+        }
 
         public override float GetSpeed()
         {
@@ -89,12 +90,10 @@ namespace GameLibrary.Dirigible
         public override void GetDamage(int damage)
         {
             Health -= damage;
-            
+
+
         }
-        public override bool IsAlive()
-        {
-            return GetHealth() > 0;
-        }
+
         public override void Idle()
         {
             IsMove = true;
@@ -109,8 +108,11 @@ namespace GameLibrary.Dirigible
             if (IsMove || Fuel <= 0)
                 return;
             PositionCenter += movement;
-            Fuel--;
 
+        }
+        public override void Fly()
+        {
+            Fuel -= 1;
         }
         public override void Render()
         {

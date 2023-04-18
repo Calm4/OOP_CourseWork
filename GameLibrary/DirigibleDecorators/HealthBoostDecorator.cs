@@ -11,20 +11,23 @@ namespace GameLibrary.DirigibleDecorators
     public class HealthBoostDecorator : DirigibleDecorator
     {
         
-        public HealthBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
+        public HealthBoostDecorator(AbstractDirigible dirigible) : base(dirigible) 
+        {
+          
+        }
 
         private int GetExtraHealth() { return 50; }
 
         public override int GetHealth()
         {
-            return _dirigible.GetHealth() + GetExtraHealth();
+            return _dirigible.GetHealth() + 50;
         }
-
-        public override bool IsAlive()
+      
+        public override void GetDamage(int damage)
         {
-            return base.IsAlive() && GetHealth() > 0;
+            Health -= damage;
+            _dirigible.GetDamage(damage);
         }
-       
 
     }
 }

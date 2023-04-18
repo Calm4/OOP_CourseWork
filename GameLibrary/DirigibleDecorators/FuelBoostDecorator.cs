@@ -19,6 +19,11 @@ namespace GameLibrary.DirigibleDecorators
         {
             return base.GetFuel() + getExtraFuel();
         }
-       
+        public override void Fly()
+        {
+            base.Fly();
+            Fuel -= 1;
+        }
+
     }
 }
