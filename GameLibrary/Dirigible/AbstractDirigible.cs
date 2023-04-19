@@ -16,15 +16,16 @@ namespace GameLibrary.Dirigible
         public Vector2 PositionCenter;
 
         public bool IsMove { get; set; }
-        public int Health { get; set; } = 100;
-        public int Armor { get; set; } = 100;
-        public int Ammo { get; set; } = 30;
-        public float ActiveSpeed { get; set; } = 0.01f;
-        public int Fuel { get; set; } = 300;
-        public abstract int GetHealth();
+        public abstract int Health { get; set; } 
+        public abstract int Armor { get; set; }
+        public int Ammo { get; set; } 
+        public float ActiveSpeed { get; set; }
+        public int Fuel { get; set; }
+       // public abstract int GetHealth();
         public abstract void GetDamage(int damage);
         public abstract float GetSpeed();
-        public abstract int GetArmor();
+       // public abstract int GetArmor();
+        public abstract void SetArmor(int armor);
         public abstract int GetAmmo();
         public abstract int GetFuel();
         public abstract void Control(List<Key> keys, int textureIdLeft, int textureIdRight);
@@ -32,7 +33,7 @@ namespace GameLibrary.Dirigible
 
         public abstract void Move(Vector2 movement);
         public abstract void Idle();
-        public abstract void Fly();
+        
        
 
         protected abstract float[] Convert(float x, float y);

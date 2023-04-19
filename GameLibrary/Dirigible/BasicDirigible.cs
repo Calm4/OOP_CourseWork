@@ -18,10 +18,18 @@ namespace GameLibrary.Dirigible
             DirigibleID = textrureID;
             this.PassiveSpeed = new Vector2(0, 0.001f);
 
+            Health = 100;
+            Armor = 50;
+            Ammo = 30;
+            ActiveSpeed = 0.01f;
+            Fuel = 5000;
+
 
         }
         public Vector2 PassiveSpeed { get; set; }
 
+        public override int Health { get; set; }
+        public override int Armor { get; set; }
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
@@ -68,16 +76,20 @@ namespace GameLibrary.Dirigible
             return Ammo;
         }
 
-        public override int GetArmor()
+      /*  public override int GetArmor()
         {
             return Armor;
+        }*/
+        public override void SetArmor(int value)
+        {
+            Armor = value;
         }
 
-        public override int GetHealth()
+     /*   public override int GetHealth()
         {
             return Health;
         }
-
+*/
         public override float GetSpeed()
         {
             return ActiveSpeed;
@@ -89,9 +101,24 @@ namespace GameLibrary.Dirigible
 
         public override void GetDamage(int damage)
         {
-            Health -= damage;
-
-
+           int tempHealth = damage - Armor; // 30 - 20 = 10
+            if (Armor > 0)
+            {
+                if (Armor > damage)
+                {
+                    Armor -= damage;
+                }
+                else
+                {
+                    Armor = 0;
+                    Health -= tempHealth;
+                }
+            }
+            else
+            {
+                Health -= damage;
+            }
+            // Health -= damage;
         }
 
         public override void Idle()
@@ -105,15 +132,12 @@ namespace GameLibrary.Dirigible
 
         public override void Move(Vector2 movement)
         {
-            if (IsMove || Fuel <= 0)
+            if (IsMove || GetFuel() <= 0)
                 return;
             PositionCenter += movement;
+            Fuel--;
+        }
 
-        }
-        public override void Fly()
-        {
-            Fuel -= 1;
-        }
         public override void Render()
         {
             ObjectRenderer.RenderObjects(DirigibleID, GetPosition());

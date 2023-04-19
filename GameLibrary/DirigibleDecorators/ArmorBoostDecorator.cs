@@ -9,13 +9,39 @@ namespace GameLibrary.DirigibleDecorators
 {
     public class ArmorBoostDecorator : DirigibleDecorator
     {
-        public ArmorBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
+        private int _extraArmor;
+        public ArmorBoostDecorator(AbstractDirigible dirigible,int extraArmor) : base(dirigible) 
+        {
+            _extraArmor = extraArmor;
+        }
 
         private int GetExtraArmor() { return 30; }
 
-        public override int GetArmor()
+        public override int Armor
         {
-            return base.GetArmor() + GetExtraArmor();
+            get { return _dirigible.Armor + _extraArmor; }
+            set { _dirigible.Armor = value; }
+        }
+
+        public override void GetDamage(int damage)
+        {
+            if (_extraArmor > 0)
+            {
+                int tempDamage = damage - _extraArmor;
+                if (tempDamage > 0)
+                {
+                    _dirigible.GetDamage(tempDamage);
+                }
+                _extraArmor -= damage;
+                if (_extraArmor < 0)
+                {
+                    _extraArmor = 0;
+                }
+            }
+            else
+            {
+                _dirigible.GetDamage(damage);
+            }
         }
 
     }

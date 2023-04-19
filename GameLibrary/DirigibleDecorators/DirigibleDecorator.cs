@@ -19,19 +19,33 @@ namespace GameLibrary.DirigibleDecorators
             _dirigible = dirigible;
         }
 
-        public override int GetHealth()
+        public override int Health
+        {
+            get { return _dirigible.Health; }
+            set { _dirigible.Health = value; }
+        }
+        public override int Armor
+        {
+            get { return _dirigible.Armor; }
+            set { _dirigible.Armor = value; }
+        }
+       /* public override int GetHealth()
         {
             return _dirigible.GetHealth();
-        }
+        }*/
 
         public override void GetDamage(int damage)
         {
             _dirigible.GetDamage(damage);
 
         }
-        public override int GetArmor()
+       /* public override int GetArmor()
         {
             return _dirigible.GetArmor();
+        }*/
+        public override void SetArmor(int armor)
+        {
+            _dirigible.SetArmor(armor);
         }
 
         public override int GetAmmo()
@@ -47,11 +61,7 @@ namespace GameLibrary.DirigibleDecorators
         {
             return _dirigible.GetFuel();
         }
-        public override void Fly()
-        {
-            _dirigible.Fly();
-          
-        }
+       
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
         {
             _dirigible.Control(keys, textureIdLeft, textureIdRight);
