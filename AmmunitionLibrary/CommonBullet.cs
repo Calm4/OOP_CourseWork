@@ -11,12 +11,13 @@ namespace AmmunitionLibrary
 {
     public class CommonBullet : Bullet
     {
-        public override int Damage { get; set; } = 20;
+        public override int Damage { get; set; } = 30;
+        private Vector2 direction;
         public CommonBullet(Vector2 startPosition, int textureID,bool direction)
         {
             PositionCenter = startPosition;
             TextureID = textureID;
-            Direction = direction;
+            this.direction = direction ? new Vector2(0.025f, 0f) : new Vector2(-0.025f, 0f);
         }
         public override void Render()
         {
@@ -35,17 +36,8 @@ namespace AmmunitionLibrary
 
         public override void Fire()
         {
-            if (Direction == true)
-            {
-                PositionCenter += new Vector2(0.025f, 0f);
+            PositionCenter += direction;
 
-            }
-            else
-            {
-                PositionCenter += new Vector2(-0.025f, 0f);
-
-            }
-           
         }
         public override RectangleF GetCollider()
         {

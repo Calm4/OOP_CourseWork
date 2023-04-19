@@ -20,7 +20,7 @@ namespace GameLibrary.Dirigible
 
             Health = 100;
             Armor = 50;
-            Ammo = 10;
+            Ammo = 15;
             Speed = 0.01f; // ????
             Fuel = 5000; //2000
             IsShoot = false;

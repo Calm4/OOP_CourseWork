@@ -15,12 +15,27 @@ namespace GameLibrary.DirigibleDecorators
         public FuelBoostDecorator(AbstractDirigible dirigible,int extraFuel) : base(dirigible) 
         {
               _extraFuel = extraFuel;
-            
+            if (_dirigible.Fuel <= _maxFuel)
+            {
+                if (_dirigible.Fuel <= _maxFuel - _extraFuel)
+                {
+                    _dirigible.Fuel += _extraFuel;
+                }
+                else
+                {
+                    _dirigible.Fuel = _maxFuel;
+                }
+            }
+            else
+            {
+                _dirigible.Fuel = _maxFuel;
+            }
+            _dirigible.Fuel += extraFuel;
         }
 
         public override int Fuel
         {
-            get { return Math.Min(_dirigible.Fuel + _extraFuel, _maxFuel); }
+            get { return _dirigible.Fuel; }
             set { _dirigible.Fuel = value; }
         }
 

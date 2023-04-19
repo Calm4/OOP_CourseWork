@@ -10,7 +10,7 @@ namespace AmmunitionLibrary
 {
     public class FastBullet : Bullet
     {
-        public override int Damage { get; set; } = 10;
+        public override int Damage { get; set; } = 20;
         public override void Fire()
         {
             throw new NotImplementedException();

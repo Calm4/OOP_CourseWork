@@ -132,7 +132,7 @@ namespace DirigibleBattle
             Debug.WriteLine("=========================");
             Debug.WriteLine(bd.Ammo); //15
 
-            // Debug.WriteLine(bd.GetHealth());
+
 
 
 
@@ -193,9 +193,9 @@ namespace DirigibleBattle
         {
 
             float randomPosX, randomPosY;
-           
 
-            if (prizeList.Count < 5)
+
+            if (prizeList.Count < 3)
             {
                 int prizeNumber = random.Next(0, 5);
                 randomPosX = (float)(random.NextDouble() * 1.5 - 0.75); // -0.75 до 0.75
@@ -245,18 +245,24 @@ namespace DirigibleBattle
 
             glControl.InvalidateVisual();
 
-            // Debug.WriteLine(firstPlayer.Fuel);
+
+            //Debug.WriteLine(firstPlayer.Fuel);
         }
 
+        int numberOfFirstPlayerPrizes = 0;
+        int numberOfSecondPlayerPrizes = 0;
         private void GameRender()
         {
+            // что бы игра не была бесконечной, игрок может подобрать только до 15 призов
             firstPlayer.Idle();
             secondPlayer.Idle();
             GameStateCheck();
 
             for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
             {
+
                 firstPlayerAmmo[i].Fire();
+
 
                 if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
                 {
@@ -295,22 +301,25 @@ namespace DirigibleBattle
             {
                 Prize prize = prizeList[i];
 
-                if (firstPlayer.GetCollider().IntersectsWith(prize.GetCollider()))
+                if (firstPlayer.GetCollider().IntersectsWith(prize.GetCollider()) && numberOfFirstPlayerPrizes < 15)
                 {
+                    numberOfFirstPlayerPrizes++;
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
 
-                        int ammoBoostCount = random.Next(2,6);
+                        int ammoBoostCount = random.Next(2, 6);
                         firstPlayer = new AmmoBoostDecorator(firstPlayer, ammoBoostCount);
-
                         Debug.WriteLine("ammo:" + firstPlayer.Ammo);
+                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
 
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
                         int armorBoostCount = random.Next(10, 31);
                         firstPlayer = new ArmorBoostDecorator(firstPlayer, armorBoostCount);
+
                         Debug.WriteLine("arrmor:" + firstPlayer.Armor);
+                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
 
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
@@ -319,20 +328,25 @@ namespace DirigibleBattle
                         firstPlayer = new FuelBoostDecorator(firstPlayer, fuelBoostCount);
 
                         Debug.WriteLine("fuel:" + firstPlayer.Fuel);
+                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
 
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
                     {
-                        int healthBoostCount = random.Next(10, 41);
+                        int healthBoostCount = random.Next(10, 31);
                         firstPlayer = new HealthBoostDecorator(firstPlayer, healthBoostCount);
+
                         Debug.WriteLine("hp:" + firstPlayer.Health);
+                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
 
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
                         float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
                         firstPlayer = new SpeedBoostDecorator(firstPlayer, speedBoostCount);
+
                         Debug.WriteLine("speed:" + firstPlayer.Speed);
+                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
 
                     }
                     prizeList.Remove(prize);
@@ -343,14 +357,14 @@ namespace DirigibleBattle
             {
                 Prize prize = prizeList[i];
 
-                if (secondPlayer.GetCollider().IntersectsWith(prize.GetCollider()))
+                if (secondPlayer.GetCollider().IntersectsWith(prize.GetCollider()) && numberOfSecondPlayerPrizes < 15)
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
 
                         int ammoBoostCount = random.Next(2, 6);
                         secondPlayer = new AmmoBoostDecorator(secondPlayer, ammoBoostCount);
-
+                        numberOfSecondPlayerPrizes++;
                         Debug.WriteLine("ammo:" + secondPlayer.Ammo);
 
                     }
@@ -358,6 +372,7 @@ namespace DirigibleBattle
                     {
                         int armorBoostCount = random.Next(10, 31);
                         secondPlayer = new ArmorBoostDecorator(secondPlayer, armorBoostCount);
+                        numberOfSecondPlayerPrizes++;
                         Debug.WriteLine("arrmor:" + secondPlayer.Armor);
 
                     }
@@ -365,7 +380,7 @@ namespace DirigibleBattle
                     {
                         int fuelBoostCount = random.Next(500, 1001);
                         secondPlayer = new FuelBoostDecorator(secondPlayer, fuelBoostCount);
-
+                        numberOfSecondPlayerPrizes++;
                         Debug.WriteLine("fuel:" + secondPlayer.Fuel);
 
                     }
@@ -373,6 +388,7 @@ namespace DirigibleBattle
                     {
                         int healthBoostCount = random.Next(10, 41);
                         secondPlayer = new HealthBoostDecorator(secondPlayer, healthBoostCount);
+                        numberOfSecondPlayerPrizes++;
                         Debug.WriteLine("hp:" + secondPlayer.Health);
 
                     }
@@ -380,6 +396,7 @@ namespace DirigibleBattle
                     {
                         float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
                         secondPlayer = new SpeedBoostDecorator(secondPlayer, speedBoostCount);
+                        numberOfSecondPlayerPrizes++;
                         Debug.WriteLine("speed:" + secondPlayer.Speed);
 
                     }
@@ -389,6 +406,47 @@ namespace DirigibleBattle
             }
 
 
+        }
+        public void ShootControl()
+        {
+            // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
+            keyboardState = OpenTK.Input.Keyboard.GetState();
+
+            bool firstPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
+            bool secondPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Enter);
+
+
+            //============================Точечная стрельба(без спама)============================//
+            if (!wasFirstPlayerFirePressed && firstPlayerFire)
+            {
+                if (firstPlayer.Ammo > 0)
+                {
+                    firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
+                    firstPlayer.Ammo--;
+                    Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+                }
+                else
+                {
+                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
+                }
+            }
+            if (!wasSecondPlayerFirePressed && secondPlayerFire)
+            {
+                if (secondPlayer.Ammo > 0)
+                {
+                    secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
+                    secondPlayer.Ammo--;
+                    Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
+                }
+                else
+                {
+                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
+                }
+            }
+
+
+            wasFirstPlayerFirePressed = firstPlayerFire;
+            wasSecondPlayerFirePressed = secondPlayerFire;
         }
         /*  public void PlayerShootSystem(AbstractDirigible player, ref List<Bullet> bulletsList)
           {
@@ -520,68 +578,7 @@ namespace DirigibleBattle
         }
 
 
-        public void ShootControl()
-        {
-            // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
-            keyboardState = OpenTK.Input.Keyboard.GetState();
-            bool direction = false;
-
-            if (firstPlayer.DirigibleID == firstDirigibleTextureLeft)
-            {
-                direction = false;
-            }
-            else
-            {
-                direction = true;
-            }
-
-            if (secondPlayer.DirigibleID == secondDirigibleTextureLeft)
-            {
-                direction = false;
-            }
-            else
-            {
-                direction = true;
-            }
-
-
-            bool firstPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
-            bool secondPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Enter);
-
-
-            //============================Точечная стрельба(без спама)============================//
-            if (!wasFirstPlayerFirePressed && firstPlayerFire)
-            {
-                if (firstPlayer.Ammo > 0)
-                {
-                    firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
-                    firstPlayer.Ammo--;
-                    Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
-                    
-                }
-                else
-                {
-                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
-                }
-            }
-            if (!wasSecondPlayerFirePressed && secondPlayerFire)
-            {
-                if (secondPlayer.Ammo > 0)
-                {
-                    secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
-                    secondPlayer.Ammo--;
-                    Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
-                }
-                else
-                {
-                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
-                }
-            }
-
-
-            wasFirstPlayerFirePressed = firstPlayerFire;
-            wasSecondPlayerFirePressed = secondPlayerFire;
-        }
+       
 
 
     }
