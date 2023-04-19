@@ -9,17 +9,19 @@ namespace GameLibrary.DirigibleDecorators
 {
     public class FuelBoostDecorator : DirigibleDecorator
     {
-        public FuelBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
+        int _extraFuel;
+        public FuelBoostDecorator(AbstractDirigible dirigible,int extraFuel) : base(dirigible) 
+        {
+              _extraFuel = extraFuel;
+        }
 
-        private int getExtraFuel()
+        public override int Fuel
         {
-            return 200;
+            get { return _dirigible.Fuel + _extraFuel; }
+            set { _dirigible.Fuel = value; }
         }
-        public override int GetFuel()
-        {
-            return base.GetFuel() + getExtraFuel();
-        }
-    
+
+
 
     }
 }

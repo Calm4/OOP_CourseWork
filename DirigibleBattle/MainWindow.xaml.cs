@@ -96,25 +96,25 @@ namespace DirigibleBattle
             StartTimer();
 
             AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
-                Debug.WriteLine(bd.Health); //100
-                Debug.WriteLine(bd.Armor); // 50
-                bd.GetDamage(40);
-                Debug.WriteLine("========================="); 
-                Debug.WriteLine(bd.Health); //100
-                Debug.WriteLine(bd.Armor); //10
-                bd.GetDamage(40);
-                Debug.WriteLine("=========================");
-                Debug.WriteLine(bd.Health); //70
-                Debug.WriteLine(bd.Armor); //0
-                bd = new ArmorBoostDecorator(bd, 20);
-                Debug.WriteLine("=========================");
-                Debug.WriteLine(bd.Health); //70
-                Debug.WriteLine(bd.Armor); //20
-                bd.GetDamage(40);
-                Debug.WriteLine("=========================");
-                Debug.WriteLine(bd.Health); //50
-                Debug.WriteLine(bd.Armor); //0
-            bd = new HealthBoostDecorator(bd,50);
+            Debug.WriteLine(bd.Health); //100
+            Debug.WriteLine(bd.Armor); // 50
+            bd.GetDamage(40);
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Health); //100
+            Debug.WriteLine(bd.Armor); //10
+            bd.GetDamage(40);
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Health); //70
+            Debug.WriteLine(bd.Armor); //0
+            bd = new ArmorBoostDecorator(bd, 20);
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Health); //70
+            Debug.WriteLine(bd.Armor); //20
+            bd = new HealthBoostDecorator(bd, 50);
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Health); //120
+            Debug.WriteLine(bd.Armor); //20
+            bd.GetDamage(40);
             Debug.WriteLine("=========================");
             Debug.WriteLine(bd.Health); //100
             Debug.WriteLine(bd.Armor); //0
@@ -160,7 +160,8 @@ namespace DirigibleBattle
             secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTextureLeft);
             firstPlayerAmmo = new List<Bullet>();
             secondPlayerAmmo = new List<Bullet>();
-            screenBorderCollider = new RectangleF(0.0f, 0.125f, 1.0f, 0.875f);
+            screenBorderCollider = new RectangleF(0f, 0.1f, 1f, 0.875f);
+
         }
         private void StartTimer()
         {
@@ -186,7 +187,7 @@ namespace DirigibleBattle
 
             float randomPosX, randomPosY;
 
-            if (prizeList.Count < 11)
+            if (prizeList.Count < 9)
             {
                 int prizeNumber = random.Next(0, 5);
                 randomPosX = (float)(random.NextDouble() * 1.5 - 0.75); // -0.75 до 0.75
@@ -229,8 +230,10 @@ namespace DirigibleBattle
             GameRender();
             ShootControl();
 
-            firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight);
-            secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight);
+            firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight,screenBorderCollider);
+
+            secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight,screenBorderCollider);
+
 
             glControl.InvalidateVisual();
 
@@ -296,7 +299,7 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
-                        firstPlayer = new ArmorBoostDecorator(firstPlayer,20);
+                        firstPlayer = new ArmorBoostDecorator(firstPlayer, 20);
                         Debug.WriteLine("arrmor:" + firstPlayer.Armor);
 
                     }
@@ -338,7 +341,7 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
-                        secondPlayer = new ArmorBoostDecorator(secondPlayer,20);
+                        secondPlayer = new ArmorBoostDecorator(secondPlayer, 20);
                         Debug.WriteLine("arrmor:" + secondPlayer.Armor);
 
                     }
@@ -430,7 +433,7 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
-                        player = new ArmorBoostDecorator(player,20);
+                        player = new ArmorBoostDecorator(player, 20);
                         Debug.WriteLine("arrmor:" + player.Armor);
 
                     }
@@ -443,7 +446,7 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
                     {
-                        player = new HealthBoostDecorator(player,50);
+                        player = new HealthBoostDecorator(player, 50);
                         Debug.WriteLine("hp:" + player.Health);
 
                     }
@@ -530,12 +533,12 @@ namespace DirigibleBattle
             //============================Точечная стрельба(без спама)============================//
             if (!wasFirstPlayerFirePressed && firstPlayerFire)
             {
-                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(0f, -0.05f), commonBulletTexture, direction));
+                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
             }
             if (!wasSecondPlayerFirePressed && secondPlayerFire)
             {
 
-                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.PositionCenter - new Vector2(-0f, -0.05f), commonBulletTexture, direction));
+                secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
             }
 
 

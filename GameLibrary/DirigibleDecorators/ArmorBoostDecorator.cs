@@ -10,12 +10,10 @@ namespace GameLibrary.DirigibleDecorators
     public class ArmorBoostDecorator : DirigibleDecorator
     {
         private int _extraArmor;
-        public ArmorBoostDecorator(AbstractDirigible dirigible,int extraArmor) : base(dirigible) 
+        public ArmorBoostDecorator(AbstractDirigible dirigible, int extraArmor) : base(dirigible)
         {
             _extraArmor = extraArmor;
         }
-
-        private int GetExtraArmor() { return 30; }
 
         public override int Armor
         {

@@ -12,12 +12,10 @@ namespace GameLibrary.DirigibleDecorators
     public class HealthBoostDecorator : DirigibleDecorator
     {
         private int _extraHealth;
-        public HealthBoostDecorator(AbstractDirigible dirigible, int extraHealth) : base(dirigible) 
+        public HealthBoostDecorator(AbstractDirigible dirigible, int extraHealth) : base(dirigible)
         {
             _extraHealth = extraHealth;
         }
-
-        private int GetExtraHealth() { return 50; }
 
         public override int Health
         {
@@ -25,7 +23,7 @@ namespace GameLibrary.DirigibleDecorators
             set { _dirigible.Health = value; }
         }
 
-        
+
 
     }
 }

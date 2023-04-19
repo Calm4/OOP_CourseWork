@@ -29,10 +29,15 @@ namespace GameLibrary.DirigibleDecorators
             get { return _dirigible.Armor; }
             set { _dirigible.Armor = value; }
         }
-       /* public override int GetHealth()
+        public override int Fuel
         {
-            return _dirigible.GetHealth();
-        }*/
+            get { return _dirigible.Fuel; }
+            set { _dirigible.Fuel = value; }
+        }
+        /* public override int GetHealth()
+         {
+             return _dirigible.GetHealth();
+         }*/
 
         public override void GetDamage(int damage)
         {
@@ -62,16 +67,28 @@ namespace GameLibrary.DirigibleDecorators
             return _dirigible.GetFuel();
         }
        
-        public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight)
+        public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea)
         {
-            _dirigible.Control(keys, textureIdLeft, textureIdRight);
+            _dirigible.Control(keys, textureIdLeft, textureIdRight,checkPlayArea);
         }
 
-        public override void Shoot(List<Key> keys, int[] texture)
+        /*public override void Shoot(List<Key> keys, int[] texture)
         {
             throw new NotImplementedException();
-        }
+        }*/
+        public override Vector2 GetGunPosition()
+        {
+            // Позиция пушки относительно координат дирижабля
+            Vector2 gunPosition = _dirigible.GetGunPosition() + gunOffset;
 
+            // Если дирижабль смотрит влево, инвертируем координату X позиции пушки
+            if (!IsShoot)
+            {
+                gunPosition.X = _dirigible.GetGunPosition().X - gunOffset.X;
+            }
+
+            return gunPosition;
+        }
         public override void Idle()
         {
             _dirigible.Idle();
