@@ -10,21 +10,25 @@ namespace AmmunitionLibrary
 {
     public class HeavyBullet : Bullet
     {
+        
         public override int Damage { get; set; } = 40;
+        public override float Speed { get; set; } = 0.015f;
 
-        public override void Fire()
+        public HeavyBullet(Vector2 startPosition, int textureID, bool direction) : base()
         {
-            throw new NotImplementedException();
+            PositionCenter = startPosition;
+            TextureID = textureID;
+            this.direction = direction ? new Vector2(Speed, 0f) : new Vector2(-Speed, 0f);
         }
-
-        public override RectangleF GetCollider()
+        public override Vector2[] GetPosition()
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Render()
-        {
-            throw new NotImplementedException();
+            return new Vector2[4]
+            {
+                PositionCenter + new Vector2(-0.06f, -0.045f),
+                PositionCenter + new Vector2(0.06f, -0.045f),
+                PositionCenter + new Vector2(0.06f, 0.045f),
+                PositionCenter + new Vector2(-0.06f, 0.045f),
+            };
         }
     }
 }

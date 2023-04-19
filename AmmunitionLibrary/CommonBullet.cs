@@ -6,63 +6,32 @@ using System.Text;
 using System.Threading.Tasks;
 using GameLibrary;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace AmmunitionLibrary
 {
     public class CommonBullet : Bullet
     {
         public override int Damage { get; set; } = 30;
-        private Vector2 direction;
-        public CommonBullet(Vector2 startPosition, int textureID,bool direction)
+        public override float Speed { get; set; } = 0.025f;
+
+        public CommonBullet(Vector2 startPosition, int textureID, bool direction) : base()
         {
             PositionCenter = startPosition;
             TextureID = textureID;
-            this.direction = direction ? new Vector2(0.025f, 0f) : new Vector2(-0.025f, 0f);
+            this.direction = direction ? new Vector2(Speed, 0f) : new Vector2(-Speed, 0f);
         }
-        public override void Render()
-        {
-            ObjectRenderer.RenderObjects(TextureID, GetPosition());
-        }
-        private Vector2[] GetPosition()
+
+        public override Vector2[] GetPosition()
         {
             return new Vector2[4]
             {
-                PositionCenter + new Vector2(-0.05f, -0.03f),
-                PositionCenter + new Vector2(0.05f, -0.03f),
-                PositionCenter + new Vector2(0.05f, 0.03f),
-                PositionCenter + new Vector2(-0.05f, 0.03f),
+                PositionCenter + new Vector2(-0.06f, -0.04f),
+                PositionCenter + new Vector2(0.06f, -0.04f),
+                PositionCenter + new Vector2(0.06f, 0.04f),
+                PositionCenter + new Vector2(-0.06f, 0.04f),
             };
         }
 
-        public override void Fire()
-        {
-            PositionCenter += direction;
-
-        }
-        public override RectangleF GetCollider()
-        {
-            Vector2[] colliderPosition = GetPosition();
-
-            float colliderWidth = (colliderPosition[2].X - colliderPosition[3].X) / 2.0f;
-            float colliderHeight = (colliderPosition[3].Y - colliderPosition[0].Y) / 2.0f;
-
-            float[] convertedLeftTop = Convert(colliderPosition[3].X, colliderPosition[3].Y);
-
-            RectangleF collider = new RectangleF(convertedLeftTop[0], convertedLeftTop[1], colliderWidth, colliderHeight);
-
-            return collider;
-        }
-        private static float[] Convert(float pointX, float pointY)
-        {
-            float centralPointX = 0.5f;
-            float centralPointY = 0.5f;
-
-            float[] resultPoint = new float[2];
-
-            resultPoint[0] = centralPointX + pointX / 2.0f;
-            resultPoint[1] = centralPointY - pointY / 2.0f;
-
-            return resultPoint;
-        }
     }
 }

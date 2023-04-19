@@ -257,46 +257,9 @@ namespace DirigibleBattle
             firstPlayer.Idle();
             secondPlayer.Idle();
             GameStateCheck();
-
-            for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
-            {
-
-                firstPlayerAmmo[i].Fire();
-
-
-                if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
-                {
-                    secondPlayer.GetDamage(firstPlayerAmmo[i].Damage);
-                    Debug.WriteLine("Health: " + secondPlayer.Health);
-                    Debug.WriteLine("Armor: " + secondPlayer.Armor);
-                    firstPlayerAmmo.RemoveAt(i);
-                    continue;
-                }
-
-                if (!firstPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
-                {
-                    firstPlayerAmmo.RemoveAt(i);
-                }
-            }
-
-            for (int i = secondPlayerAmmo.Count - 1; i >= 0; i--)
-            {
-                secondPlayerAmmo[i].Fire();
-
-                if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
-                {
-                    firstPlayer.GetDamage(secondPlayerAmmo[i].Damage);
-                    Debug.WriteLine("Health: " + firstPlayer.Health);
-                    Debug.WriteLine("Armor: " + firstPlayer.Armor);
-                    secondPlayerAmmo.RemoveAt(i);
-                    continue;
-                }
-
-                if (!secondPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
-                {
-                    secondPlayerAmmo.RemoveAt(i);
-                }
-            }
+            CheckPlayersDamage();
+            //  ApplyPrize(prizeList,firstPlayer);
+            //  ApplyPrize(prizeList, secondPlayer);
             for (int i = 0; i < prizeList.Count; i++)
             {
                 Prize prize = prizeList[i];
@@ -306,7 +269,6 @@ namespace DirigibleBattle
                     numberOfFirstPlayerPrizes++;
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-
                         int ammoBoostCount = random.Next(2, 6);
                         firstPlayer = new AmmoBoostDecorator(firstPlayer, ammoBoostCount);
                         Debug.WriteLine("ammo:" + firstPlayer.Ammo);
@@ -352,6 +314,7 @@ namespace DirigibleBattle
                     prizeList.Remove(prize);
                     i--;
                 }
+
             }
             for (int i = 0; i < prizeList.Count; i++)
             {
@@ -407,36 +370,138 @@ namespace DirigibleBattle
 
 
         }
+        int NumberOfPrizes = 0;
+        public void ApplyPrize(List<Prize> prizeList, AbstractDirigible player)
+        {
+            for (int i = 0; i < prizeList.Count; i++)
+            {
+                Prize prize = prizeList[i];
+
+                if (player.GetCollider().IntersectsWith(prize.GetCollider()) && NumberOfPrizes < 15)
+                {
+                    NumberOfPrizes++;
+                    if (prize.GetType().Equals(typeof(AmmoPrize)))
+                    {
+
+                        int ammoBoostCount = random.Next(2, 6);
+                        player = new AmmoBoostDecorator(player, ammoBoostCount);
+                        Debug.WriteLine("ammo:" + player.Ammo);
+                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
+
+                    }
+                    if (prize.GetType().Equals(typeof(ArmorPrize)))
+                    {
+                        int armorBoostCount = random.Next(10, 31);
+                        player = new ArmorBoostDecorator(player, armorBoostCount);
+
+                        Debug.WriteLine("arrmor:" + player.Armor);
+                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
+
+                    }
+                    if (prize.GetType().Equals(typeof(FuelPrize)))
+                    {
+                        int fuelBoostCount = random.Next(500, 1001);
+                        player = new FuelBoostDecorator(player, fuelBoostCount);
+
+                        Debug.WriteLine("fuel:" + player.Fuel);
+                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
+
+                    }
+                    if (prize.GetType().Equals(typeof(HealthPrize)))
+                    {
+                        int healthBoostCount = random.Next(10, 31);
+                        player = new HealthBoostDecorator(player, healthBoostCount);
+
+                        Debug.WriteLine("hp:" + player.Health);
+                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
+
+                    }
+                    if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
+                    {
+                        float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
+                        player = new SpeedBoostDecorator(player, speedBoostCount);
+
+                        Debug.WriteLine("speed:" + player.Speed);
+                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
+
+                    }
+                    prizeList.Remove(prize);
+                    i--;
+                }
+            }
+        }
+
         public void ShootControl()
         {
             // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
             keyboardState = OpenTK.Input.Keyboard.GetState();
 
-            bool firstPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
-            bool secondPlayerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Enter);
+            bool firstPlayerFireCommon = keyboardState.IsKeyDown(OpenTK.Input.Key.Z);
+            bool firstPlayerFireFast = keyboardState.IsKeyDown(OpenTK.Input.Key.X);
+            bool firstPlayerFireHeavy = keyboardState.IsKeyDown(OpenTK.Input.Key.C);
+
+            bool secondPlayerFireCommon = keyboardState.IsKeyDown(OpenTK.Input.Key.Insert);
+            bool secondPlayerFireFast = keyboardState.IsKeyDown(OpenTK.Input.Key.PageUp);
+            bool secondPlayerFireHeavy = keyboardState.IsKeyDown(OpenTK.Input.Key.PageDown);
 
 
             //============================Точечная стрельба(без спама)============================//
-            if (!wasFirstPlayerFirePressed && firstPlayerFire)
+            if (!wasFirstPlayerFirePressed && (firstPlayerFireCommon || firstPlayerFireFast || firstPlayerFireHeavy))
             {
                 if (firstPlayer.Ammo > 0)
                 {
-                    firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
-                    firstPlayer.Ammo--;
-                    Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+                    if (firstPlayerFireCommon)
+                    {
+                        firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
+                        firstPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+
+                    }
+                    if (firstPlayerFireFast)
+                    {
+                        firstPlayerAmmo.Add(new FastBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
+                        firstPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+
+                    }
+                    if (firstPlayerFireHeavy)
+                    {
+                        firstPlayerAmmo.Add(new HeavyBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
+                        firstPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+
+                    }
                 }
                 else
                 {
                     Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
                 }
             }
-            if (!wasSecondPlayerFirePressed && secondPlayerFire)
+            if (!wasSecondPlayerFirePressed && (secondPlayerFireCommon || secondPlayerFireFast || secondPlayerFireHeavy))
             {
                 if (secondPlayer.Ammo > 0)
                 {
-                    secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
-                    secondPlayer.Ammo--;
-                    Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
+                    if (secondPlayerFireCommon)
+                    {
+                        secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
+                        secondPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
+
+                    }
+                    if (secondPlayerFireFast)
+                    {
+                        secondPlayerAmmo.Add(new FastBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
+                        secondPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
+
+                    }
+                    if (secondPlayerFireHeavy)
+                    {
+                        secondPlayerAmmo.Add(new HeavyBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
+                        secondPlayer.Ammo--;
+                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
+
+                    }
                 }
                 else
                 {
@@ -444,32 +509,53 @@ namespace DirigibleBattle
                 }
             }
 
-
-            wasFirstPlayerFirePressed = firstPlayerFire;
-            wasSecondPlayerFirePressed = secondPlayerFire;
+            wasFirstPlayerFirePressed = firstPlayerFireCommon || firstPlayerFireFast || firstPlayerFireHeavy;
+            wasSecondPlayerFirePressed = secondPlayerFireCommon || secondPlayerFireFast || secondPlayerFireHeavy;
         }
-        /*  public void PlayerShootSystem(AbstractDirigible player, ref List<Bullet> bulletsList)
-          {
+        public void CheckPlayersDamage()
+        {
+            for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
+            {
 
-              for (int i = bulletsList.Count - 1; i >= 0; i--)
-              {
-                  bulletsList[i].Fire();
+                firstPlayerAmmo[i].Fire();
 
-                  if (player.GetCollider().IntersectsWith(bulletsList[i].GetCollider()))
-                  {
-                      player.GetDamage(bulletsList[i].Damage);
-                      Debug.WriteLine("Health: " + player.Health);
-                      Debug.WriteLine("Armor: " + player.Armor);
-                      bulletsList.RemoveAt(i);
-                      continue;
-                  }
 
-                  if (!bulletsList[i].GetCollider().IntersectsWith(screenBorderCollider))
-                  {
-                      bulletsList.RemoveAt(i);
-                  }
-              }
-          }*/
+                if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
+                {
+                    secondPlayer.GetDamage(firstPlayerAmmo[i].Damage);
+                    Debug.WriteLine("Health: " + secondPlayer.Health);
+                    Debug.WriteLine("Armor: " + secondPlayer.Armor);
+                    firstPlayerAmmo.RemoveAt(i);
+                    continue;
+                }
+
+                if (!firstPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
+                {
+                    firstPlayerAmmo.RemoveAt(i);
+                }
+            }
+
+            for (int i = secondPlayerAmmo.Count - 1; i >= 0; i--)
+            {
+                secondPlayerAmmo[i].Fire();
+
+
+                if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
+                {
+                    firstPlayer.GetDamage(secondPlayerAmmo[i].Damage);
+                    Debug.WriteLine("Health: " + firstPlayer.Health);
+                    Debug.WriteLine("Armor: " + firstPlayer.Armor);
+                    secondPlayerAmmo.RemoveAt(i);
+                    continue;
+                }
+
+                if (!secondPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
+                {
+                    secondPlayerAmmo.RemoveAt(i);
+                }
+            }
+        }
+
         public void GameStateCheck()
         {
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
@@ -578,7 +664,7 @@ namespace DirigibleBattle
         }
 
 
-       
+
 
 
     }

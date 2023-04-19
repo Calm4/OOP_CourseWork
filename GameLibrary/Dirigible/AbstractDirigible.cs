@@ -13,7 +13,7 @@ namespace GameLibrary.Dirigible
     public abstract class AbstractDirigible
     {
 
-        public int DirigibleID { get; set; }
+        public abstract int DirigibleID { get; set; }
         public Vector2 PositionCenter;
         protected Vector2 gunOffset;
 
@@ -26,6 +26,7 @@ namespace GameLibrary.Dirigible
         public abstract float Speed { get; set; }
 
         public abstract void GetDamage(int damage);
+      
 
         public abstract void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea);
         // public abstract void Shoot(List<Key> keys, int[] texture, KeyboardState keyboardState);
@@ -45,6 +46,9 @@ namespace GameLibrary.Dirigible
                 PositionCenter + new Vector2(-0.1f, 0.1f),
            };
         }
-        public abstract void Render();
+        public virtual void Render()
+        {
+            ObjectRenderer.RenderObjects(DirigibleID, GetPosition());
+        }
     }
 }

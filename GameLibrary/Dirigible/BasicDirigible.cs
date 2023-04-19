@@ -34,6 +34,7 @@ namespace GameLibrary.Dirigible
         public override int Fuel { get; set; }
         public override int Ammo { get; set; }
         public override float Speed { get; set; }
+        public override int DirigibleID { get; set; }
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF playArea)
         {
@@ -110,7 +111,7 @@ namespace GameLibrary.Dirigible
             return gunPosition;
         }
 
-     
+
 
 
         public override void GetDamage(int damage)
@@ -152,18 +153,15 @@ namespace GameLibrary.Dirigible
             Fuel--;
         }
 
-        public override void Render()
-        {
-            ObjectRenderer.RenderObjects(DirigibleID, GetPosition());
-        }
+      
         protected override Vector2[] GetPosition()
         {
             return new Vector2[4]
            {
-                PositionCenter + new Vector2(-0.1f, -0.1f),
-                PositionCenter + new Vector2(0.1f, -0.1f),
-                PositionCenter + new Vector2(0.1f, 0.1f),
-                PositionCenter + new Vector2(-0.1f, 0.1f),
+                PositionCenter + new Vector2(-0.07f, -0.12f),
+                PositionCenter + new Vector2(0.07f, -0.12f),
+                PositionCenter + new Vector2(0.07f, 0.12f),
+                PositionCenter + new Vector2(-0.07f, 0.12f),
            };
         }
 

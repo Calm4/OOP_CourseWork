@@ -44,7 +44,12 @@ namespace GameLibrary.DirigibleDecorators
             get { return _dirigible.Speed; }
             set { _dirigible.Speed = value; }
         }
-       
+        public override int DirigibleID 
+        { 
+            get { return _dirigible.DirigibleID; }
+            set { _dirigible.DirigibleID = value;  }
+        }
+
 
         public override void GetDamage(int damage)
         {
