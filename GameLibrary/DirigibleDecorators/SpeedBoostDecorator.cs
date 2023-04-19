@@ -10,13 +10,22 @@ namespace GameLibrary.DirigibleDecorators
 {
     public class SpeedBoostDecorator : DirigibleDecorator
     {
-        public SpeedBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
-
-        private Vector2 GetExtraSpeed() { return new Vector2(); }
-
-        public override void Move(Vector2 movement)
+        private float _extraSpeed;
+        public SpeedBoostDecorator(AbstractDirigible dirigible, float extraSpeed) : base(dirigible)
         {
-            base.Move(movement);    
+            _extraSpeed = extraSpeed;
+            if (_dirigible.Speed < 0.0175f) // Ограничение по max скорости
+            {
+                _dirigible.Speed += extraSpeed;
+            }
+        }
+
+
+
+        public override float Speed
+        {
+            get { return _dirigible.Speed; }
+            set { _dirigible.Speed = value; }
         }
     }
 }

@@ -21,7 +21,7 @@ namespace GameLibrary.Dirigible
             Health = 100;
             Armor = 50;
             Ammo = 10;
-            ActiveSpeed = 0.01f;
+            Speed = 0.01f; // ????
             Fuel = 5000;
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
@@ -33,6 +33,7 @@ namespace GameLibrary.Dirigible
         public override int Armor { get; set; }
         public override int Fuel { get; set; }
         public override int Ammo { get; set; }
+        public override float Speed { get; set; }
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF playArea)
         {
@@ -67,7 +68,7 @@ namespace GameLibrary.Dirigible
             }
             if (moveVectorFirstPlayer != Vector2.Zero)
             {
-                moveVectorFirstPlayer = Vector2.Normalize(moveVectorFirstPlayer) * GetSpeed();
+                moveVectorFirstPlayer = Vector2.Normalize(moveVectorFirstPlayer) * Speed;
             }
             Move(moveVectorFirstPlayer);
         }
@@ -108,17 +109,12 @@ namespace GameLibrary.Dirigible
 
             return gunPosition;
         }
-   
+
         public override void SetArmor(int value)
         {
             Armor = value;
         }
-               
-        public override float GetSpeed()
-        {
-            return ActiveSpeed;
-        }
-        
+
 
         public override void GetDamage(int damage)
         {

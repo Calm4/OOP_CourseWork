@@ -22,10 +22,11 @@ namespace GameLibrary.Dirigible
         public abstract int Armor { get; set; }
         public abstract int Fuel { get; set; }
         public abstract int Ammo { get; set; }
+        public abstract float Speed { get; set; }
         public float ActiveSpeed { get; set; }
 
         public abstract void GetDamage(int damage);
-        public abstract float GetSpeed();
+        
 
         public abstract void SetArmor(int armor);
         public abstract void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea);

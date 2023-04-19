@@ -39,6 +39,11 @@ namespace GameLibrary.DirigibleDecorators
             get { return _dirigible.Ammo; }
             set { _dirigible.Ammo = value; }
         }
+        public override float Speed
+        {
+            get { return _dirigible.Speed; }
+            set { _dirigible.Speed = value; }
+        }
         /* public override int GetHealth()
          {
              return _dirigible.GetHealth();
@@ -49,26 +54,18 @@ namespace GameLibrary.DirigibleDecorators
             _dirigible.GetDamage(damage);
 
         }
-       /* public override int GetArmor()
-        {
-            return _dirigible.GetArmor();
-        }*/
+        /* public override int GetArmor()
+         {
+             return _dirigible.GetArmor();
+         }*/
         public override void SetArmor(int armor)
         {
             _dirigible.SetArmor(armor);
         }
 
-    
-
-        public override float GetSpeed()
-        {
-            return _dirigible.GetSpeed();
-        }
-        
-       
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea)
         {
-            _dirigible.Control(keys, textureIdLeft, textureIdRight,checkPlayArea);
+            _dirigible.Control(keys, textureIdLeft, textureIdRight, checkPlayArea);
         }
 
         /*public override void Shoot(List<Key> keys, int[] texture)

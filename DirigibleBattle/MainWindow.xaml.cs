@@ -324,8 +324,8 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
-                        firstPlayer = new SpeedBoostDecorator(firstPlayer);
-                        Debug.WriteLine("hp:" + firstPlayer.GetSpeed());
+                        firstPlayer = new SpeedBoostDecorator(firstPlayer,0.0025f);
+                        Debug.WriteLine("hp:" + firstPlayer.Speed);
 
                     }
                     prizeList.Remove(prize);
@@ -366,8 +366,8 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
-                        secondPlayer = new SpeedBoostDecorator(secondPlayer);
-                        Debug.WriteLine("hp:" + secondPlayer.GetSpeed());
+                        secondPlayer = new SpeedBoostDecorator(secondPlayer,0.0025f);
+                        Debug.WriteLine("hp:" + secondPlayer.Speed);
 
                     }
                     prizeList.Remove(prize);
@@ -458,8 +458,8 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
-                        player = new SpeedBoostDecorator(player);
-                        Debug.WriteLine("hp:" + player.GetSpeed());
+                        player = new SpeedBoostDecorator(player,0.005f);
+                        Debug.WriteLine("speed:" + player.Speed);
 
                     }
                     prizeList.Remove(prize);
