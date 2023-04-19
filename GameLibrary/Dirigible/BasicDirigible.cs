@@ -20,7 +20,7 @@ namespace GameLibrary.Dirigible
 
             Health = 100;
             Armor = 50;
-            Ammo = 30;
+            Ammo = 10;
             ActiveSpeed = 0.01f;
             Fuel = 5000;
             IsShoot = false;
@@ -32,6 +32,7 @@ namespace GameLibrary.Dirigible
         public override int Health { get; set; }
         public override int Armor { get; set; }
         public override int Fuel { get; set; }
+        public override int Ammo { get; set; }
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF playArea)
         {
@@ -40,9 +41,9 @@ namespace GameLibrary.Dirigible
             KeyboardState keyboardState = Keyboard.GetState();
             Vector2 moveVectorFirstPlayer = Vector2.Zero;
 
-            if (keyboardState.IsKeyDown(keys[0]) && (GetCollider().Y < playArea.Width - playArea.Y)) 
+            if (keyboardState.IsKeyDown(keys[0]) && (GetCollider().Y < playArea.Width - playArea.Y))
             {
-               
+
                 moveVectorFirstPlayer += new Vector2(0f, -0.001f);
 
             }
@@ -53,15 +54,13 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[2]) && (GetCollider().X > playArea.X))
             {
-               
+
                 DirigibleID = textureIdLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
             if (keyboardState.IsKeyDown(keys[3]) && (GetCollider().X < playArea.Width - 0.1f))
             {
-                Debug.WriteLine("Colider: " + GetCollider().X);
-                Debug.WriteLine("Play Area: " + playArea.Width);
                 DirigibleID = textureIdRight;
                 moveVectorFirstPlayer += new Vector2(0.001f, 0f);
 
@@ -109,37 +108,21 @@ namespace GameLibrary.Dirigible
 
             return gunPosition;
         }
-        public override int GetAmmo()
-        {
-            return Ammo;
-        }
-
-      /*  public override int GetArmor()
-        {
-            return Armor;
-        }*/
+   
         public override void SetArmor(int value)
         {
             Armor = value;
         }
-
-     /*   public override int GetHealth()
-        {
-            return Health;
-        }
-*/
+               
         public override float GetSpeed()
         {
             return ActiveSpeed;
         }
-        public override int GetFuel()
-        {
-            return Fuel;
-        }
+        
 
         public override void GetDamage(int damage)
         {
-           int tempHealth = damage - Armor; // 30 - 20 = 10
+            int tempHealth = damage - Armor; // 30 - 20 = 10
             if (Armor > 0)
             {
                 if (Armor > damage)
@@ -170,7 +153,7 @@ namespace GameLibrary.Dirigible
 
         public override void Move(Vector2 movement)
         {
-            if (IsMove || GetFuel() <= 0)
+            if (IsMove || Fuel <= 0)
                 return;
             PositionCenter += movement;
             Fuel--;

@@ -96,33 +96,42 @@ namespace DirigibleBattle
             StartTimer();
 
             AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
-            Debug.WriteLine(bd.Health); //100
-            Debug.WriteLine(bd.Armor); // 50
-            bd.GetDamage(40);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //100
-            Debug.WriteLine(bd.Armor); //10
-            bd.GetDamage(40);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //70
-            Debug.WriteLine(bd.Armor); //0
-            bd = new ArmorBoostDecorator(bd, 20);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //70
-            Debug.WriteLine(bd.Armor); //20
-            bd = new HealthBoostDecorator(bd, 50);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //120
-            Debug.WriteLine(bd.Armor); //20
-            bd.GetDamage(40);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //100
-            Debug.WriteLine(bd.Armor); //0
-            bd.GetDamage(40);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Health); //60
-            Debug.WriteLine(bd.Armor); //0
+            /* Debug.WriteLine(bd.Health); //100
+             Debug.WriteLine(bd.Armor); // 50
+             bd.GetDamage(40);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //100
+             Debug.WriteLine(bd.Armor); //10
+             bd.GetDamage(40);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //70
+             Debug.WriteLine(bd.Armor); //0
+             bd = new ArmorBoostDecorator(bd, 20);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //70
+             Debug.WriteLine(bd.Armor); //20
+             bd = new HealthBoostDecorator(bd, 50);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //120
+             Debug.WriteLine(bd.Armor); //20
+             bd.GetDamage(40);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //100
+             Debug.WriteLine(bd.Armor); //0
+             bd.GetDamage(40);
+             Debug.WriteLine("=========================");
+             Debug.WriteLine(bd.Health); //60
+             Debug.WriteLine(bd.Armor); //0*/
 
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Ammo); //500
+            bd = new AmmoBoostDecorator(bd,5);
+
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Fuel); //499
+            bd = new FuelBoostDecorator(bd, 200);
+            Debug.WriteLine("=========================");
+            Debug.WriteLine(bd.Fuel);//699
 
 
             // Debug.WriteLine(bd.GetHealth());
@@ -230,14 +239,14 @@ namespace DirigibleBattle
             GameRender();
             ShootControl();
 
-            firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight,screenBorderCollider);
+            firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight, screenBorderCollider);
 
-            secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight,screenBorderCollider);
+            secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight, screenBorderCollider);
 
 
             glControl.InvalidateVisual();
 
-            // Debug.WriteLine(firstPlayer.GetFuel());
+           // Debug.WriteLine(firstPlayer.Fuel);
         }
 
         private void GameRender()
@@ -273,7 +282,7 @@ namespace DirigibleBattle
                 if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
                 {
                     secondPlayerAmmo.RemoveAt(i);
-                    //  firstPlayer.GetHealth();
+
                     firstPlayer.GetDamage(40); //secondPlayerAmmo[i].Damage
 
                     Debug.WriteLine("Health: " + firstPlayer.Health);
@@ -292,9 +301,9 @@ namespace DirigibleBattle
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-                        firstPlayer = new AmmoBoostDecorator(firstPlayer);
+                        firstPlayer = new AmmoBoostDecorator(firstPlayer,5);
 
-                        Debug.WriteLine("ammo:" + firstPlayer.GetAmmo());
+                        Debug.WriteLine("ammo:" + firstPlayer.Ammo);
 
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
@@ -305,9 +314,9 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
                     {
-                        firstPlayer = new FuelBoostDecorator(firstPlayer);
+                        firstPlayer = new FuelBoostDecorator(firstPlayer, 200);
 
-                        Debug.WriteLine("fuel:" + firstPlayer.GetFuel());
+                        Debug.WriteLine("fuel:" + firstPlayer.Fuel);
 
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
@@ -334,9 +343,9 @@ namespace DirigibleBattle
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-                        secondPlayer = new AmmoBoostDecorator(secondPlayer);
+                        secondPlayer = new AmmoBoostDecorator(secondPlayer,5);
 
-                        Debug.WriteLine("ammo:" + secondPlayer.GetAmmo());
+                        Debug.WriteLine("ammo:" + secondPlayer.Ammo);
 
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
@@ -347,9 +356,9 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
                     {
-                        secondPlayer = new FuelBoostDecorator(secondPlayer);
+                        secondPlayer = new FuelBoostDecorator(secondPlayer, 200);
 
-                        Debug.WriteLine("fuel:" + secondPlayer.GetFuel());
+                        Debug.WriteLine("fuel:" + secondPlayer.Fuel);
 
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
@@ -426,9 +435,9 @@ namespace DirigibleBattle
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-                        player = new AmmoBoostDecorator(player);
+                        player = new AmmoBoostDecorator(player,5);
 
-                        Debug.WriteLine("ammo:" + player.GetAmmo());
+                        Debug.WriteLine("ammo:" + player.Ammo);
 
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
@@ -439,9 +448,9 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
                     {
-                        player = new FuelBoostDecorator(player);
+                        player = new FuelBoostDecorator(player, 200);
 
-                        Debug.WriteLine("fuel:" + player.GetFuel());
+                        Debug.WriteLine("fuel:" + player.Fuel);
 
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
@@ -533,7 +542,16 @@ namespace DirigibleBattle
             //============================Точечная стрельба(без спама)============================//
             if (!wasFirstPlayerFirePressed && firstPlayerFire)
             {
-                firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
+                if (firstPlayer.Ammo > 0)
+                {
+                    firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, false));
+                    firstPlayer.Ammo--;
+                    Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
+                }
+                else
+                {
+                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
+                }
             }
             if (!wasSecondPlayerFirePressed && secondPlayerFire)
             {

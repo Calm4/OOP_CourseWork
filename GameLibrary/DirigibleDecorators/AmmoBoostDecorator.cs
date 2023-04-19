@@ -9,14 +9,18 @@ namespace GameLibrary.DirigibleDecorators
 {
     public class AmmoBoostDecorator : DirigibleDecorator
     {
-        public AmmoBoostDecorator(AbstractDirigible dirigible) : base(dirigible) { }
+        private int _extraAmmo;
+        public AmmoBoostDecorator(AbstractDirigible dirigible,int extraAmmo) : base(dirigible) 
+        {
+            _extraAmmo = extraAmmo;
+        }
 
         private int GetExtraAmmo() { return 30; }
 
-        public override int GetAmmo()
+        public override int Ammo
         {
-            return base.GetAmmo() + GetExtraAmmo();
+            get { return _dirigible.Ammo + _extraAmmo; }
+            set { _dirigible.Ammo = value; }
         }
-
     }
 }
