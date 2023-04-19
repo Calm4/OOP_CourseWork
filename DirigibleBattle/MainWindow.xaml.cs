@@ -124,15 +124,12 @@ namespace DirigibleBattle
              Debug.WriteLine(bd.Armor); //0*/
 
             Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Ammo); //500
+            Debug.WriteLine(bd.Ammo); //10
+            
             bd = new AmmoBoostDecorator(bd,5);
 
             Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Fuel); //499
-            bd = new FuelBoostDecorator(bd, 200);
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Fuel);//699
-
+            Debug.WriteLine(bd.Ammo); //15
 
             // Debug.WriteLine(bd.GetHealth());
 
