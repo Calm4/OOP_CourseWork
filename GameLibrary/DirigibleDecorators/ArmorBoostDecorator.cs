@@ -10,6 +10,7 @@ namespace GameLibrary.DirigibleDecorators
     public class ArmorBoostDecorator : DirigibleDecorator
     {
         private int _extraArmor;
+        private const int _maxArmor = 50;
         public ArmorBoostDecorator(AbstractDirigible dirigible, int extraArmor) : base(dirigible)
         {
             _extraArmor = extraArmor;
@@ -17,7 +18,7 @@ namespace GameLibrary.DirigibleDecorators
 
         public override int Armor
         {
-            get { return _dirigible.Armor + _extraArmor; }
+            get { return Math.Min(_dirigible.Armor + _extraArmor, _maxArmor); }
             set { _dirigible.Armor = value; }
         }
 

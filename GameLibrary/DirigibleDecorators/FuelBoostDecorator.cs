@@ -11,15 +11,16 @@ namespace GameLibrary.DirigibleDecorators
     public class FuelBoostDecorator : DirigibleDecorator
     {
         int _extraFuel;
+        private const int _maxFuel = 5000; // 2000
         public FuelBoostDecorator(AbstractDirigible dirigible,int extraFuel) : base(dirigible) 
         {
               _extraFuel = extraFuel;
-            _dirigible.Fuel += extraFuel;
+            
         }
 
         public override int Fuel
         {
-            get { return _dirigible.Fuel; }
+            get { return Math.Min(_dirigible.Fuel + _extraFuel, _maxFuel); }
             set { _dirigible.Fuel = value; }
         }
 

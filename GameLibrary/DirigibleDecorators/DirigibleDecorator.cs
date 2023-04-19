@@ -44,24 +44,15 @@ namespace GameLibrary.DirigibleDecorators
             get { return _dirigible.Speed; }
             set { _dirigible.Speed = value; }
         }
-        /* public override int GetHealth()
-         {
-             return _dirigible.GetHealth();
-         }*/
+       
 
         public override void GetDamage(int damage)
         {
             _dirigible.GetDamage(damage);
 
         }
-        /* public override int GetArmor()
-         {
-             return _dirigible.GetArmor();
-         }*/
-        public override void SetArmor(int armor)
-        {
-            _dirigible.SetArmor(armor);
-        }
+   
+       
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea)
         {

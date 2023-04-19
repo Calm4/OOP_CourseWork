@@ -11,20 +11,28 @@ namespace GameLibrary.DirigibleDecorators
     public class SpeedBoostDecorator : DirigibleDecorator
     {
         private float _extraSpeed;
+        private const float _maxSpeed = 0.0175f;
         public SpeedBoostDecorator(AbstractDirigible dirigible, float extraSpeed) : base(dirigible)
         {
             _extraSpeed = extraSpeed;
-            if (_dirigible.Speed < 0.0175f) // Ограничение по max скорости
+           /* if (_dirigible.Speed < _maxSpeed) // Ограничение по max скорости
             {
-                _dirigible.Speed += extraSpeed;
+                if (_dirigible.Speed + _extraSpeed > _maxSpeed)
+                {
+                    _dirigible.Speed = _maxSpeed;
+                }
             }
+            else
+            {
+                _dirigible.Speed = _maxSpeed;
+            }*/
         }
 
 
 
         public override float Speed
         {
-            get { return _dirigible.Speed; }
+            get { return Math.Min(_dirigible.Speed + _extraSpeed, _maxSpeed); }
             set { _dirigible.Speed = value; }
         }
     }

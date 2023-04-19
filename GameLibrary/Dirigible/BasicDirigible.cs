@@ -22,7 +22,7 @@ namespace GameLibrary.Dirigible
             Armor = 50;
             Ammo = 10;
             Speed = 0.01f; // ????
-            Fuel = 5000;
+            Fuel = 5000; //2000
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
 
@@ -110,10 +110,7 @@ namespace GameLibrary.Dirigible
             return gunPosition;
         }
 
-        public override void SetArmor(int value)
-        {
-            Armor = value;
-        }
+     
 
 
         public override void GetDamage(int damage)
