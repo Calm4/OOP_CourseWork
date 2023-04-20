@@ -49,6 +49,8 @@ namespace DirigibleBattle
 
         DispatcherTimer gameTimer;
         DispatcherTimer prizeTimer;
+        DispatcherTimer windTimer;
+
         PrizeFactory prizeFactory;
         List<Prize> prizeList = new List<Prize>();
         Random random = new Random();
@@ -86,6 +88,19 @@ namespace DirigibleBattle
                 OpenTK.Input.Key.Left,
                 OpenTK.Input.Key.Right,
             };
+
+        readonly List<OpenTK.Input.Key> firstPlayerFire = new List<OpenTK.Input.Key>()
+        {
+            OpenTK.Input.Key.Z,
+            OpenTK.Input.Key.X,
+            OpenTK.Input.Key.C,
+        };
+        readonly List<OpenTK.Input.Key> secondPlayerFire = new List<OpenTK.Input.Key>()
+        {
+            OpenTK.Input.Key.Insert,
+            OpenTK.Input.Key.PageUp,
+            OpenTK.Input.Key.PageDown,
+        };
 
 
         public MainWindow()
@@ -137,6 +152,8 @@ namespace DirigibleBattle
 
 
         }
+
+
         private void GameSettings()
         {
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
@@ -175,18 +192,110 @@ namespace DirigibleBattle
             gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) }; // ~100 FPS
             gameTimer.Tick += GameTimer_Tick;
 
-            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16.0) };
+            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16.0) }; // ~60
             prizeTimer.Tick += PrizeTimer_Tick;
+
+            windTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) };
+            windTimer.Tick += WindTimer_Tick;
 
             gameTimer.Start();
             prizeTimer.Start();
+            windTimer.Start();
         }
+        bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
+        bool isSecondPlayerWindLeft = false;
+        private const float smoothingFactor = 0.75f; // Коэффициент сглаживания
+        private const int SpeedHistoryLength = 5;
+        private Queue<Vector2> firstPlayerSpeedHistory = new Queue<Vector2>();
+        private Queue<Vector2> secondPlayerSpeedHistory = new Queue<Vector2>();
+
+
+
+
+
+        private const int WindChangeInterval = 5000; // 5 seconds
+
+
+        int windTicks = 0;
+        int windCounter = 0;
+        int windCounter2 = 0;
+        float windSpeedFirstPlayer = 0.0f;
+
+        private void WindTimer_Tick(object sender, EventArgs e)
+        {
+            if (windCounter <= 500)
+            {
+                int windIsWork = random.Next(1, 5);
+                if (windIsWork == 4)
+                {
+                    windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
+                    firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                    firstPlayer.ChangeWindDirection(true);
+                    secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                    secondPlayer.ChangeWindDirection(true);
+                    Debug.WriteLine("1: " + windCounter);
+                    windCounter++;
+                }
+                else
+                {
+                    firstPlayer.ChangeWindDirection(false);
+                    secondPlayer.ChangeWindDirection(false);
+                    windCounter = 0;
+                }
+            }
+            else if (windCounter2 <= 500)
+            {
+                windCounter = 0;
+                windCounter2++;
+                windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
+                firstPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedFirstPlayer, 0.0f));
+                firstPlayer.ChangeWindDirection(true);
+                secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedFirstPlayer, 0.0f));
+                secondPlayer.ChangeWindDirection(true);
+                Debug.WriteLine("2: " + windCounter2);
+            }
+            else
+            {
+                firstPlayer.ChangeWindDirection(false);
+                secondPlayer.ChangeWindDirection(false);
+                windCounter = 0;
+                windCounter2 = 0;
+            }
+        }
+
+        /*
+         *  if (windTicks < 50)
+                    {
+                        int windIsWork = random.Next(1, 5);
+                        if (windIsWork == 4)
+                        {
+                            int windDirection1 = random.Next(0, 2); // 0 - влево, 1 - вправо
+                            float windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
+                            if (windDirection1 == 1)
+                            {
+                                windSpeedFirstPlayer = -windSpeedFirstPlayer;
+                            }
+
+                            firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                            firstPlayer.ChangeWindDirection(true);
+                            secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                            secondPlayer.ChangeWindDirection(true);
+                        }
+                        windTicks++;
+                    }
+                    else
+                    {
+                        firstPlayer.ChangeWindDirection(false);
+                        secondPlayer.ChangeWindDirection(false);
+                        windTicks = 0;
+                        return;
+                    }
+            */
 
 
         private void PrizeTimer_Tick(object sender, EventArgs e)
         {
             PrizeGenerate();
-
         }
 
         private void PrizeGenerate()
@@ -258,8 +367,37 @@ namespace DirigibleBattle
             secondPlayer.Idle();
             GameStateCheck();
             CheckPlayersDamage();
+            ApplyPrize();
+
+            if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && isFirstPlayerWindLeft) // ?
+            {
+                firstPlayer.ChangeWindDirection(false);
+            }
+            else if ((firstPlayer.GetCollider().X + secondPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width) && !isFirstPlayerWindLeft)
+            {
+                firstPlayer.ChangeWindDirection(false);
+            }
+            else
+                firstPlayer.ChangeWindDirection(true);
+            if ((secondPlayer.GetCollider().X + secondPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width) && !isSecondPlayerWindLeft) // || 
+            {
+                secondPlayer.ChangeWindDirection(false);
+            }
+            else if ((secondPlayer.GetCollider().X <= screenBorderCollider.X) && isSecondPlayerWindLeft)
+            {
+                secondPlayer.ChangeWindDirection(false);
+            }
+            else
+                secondPlayer.ChangeWindDirection(true);
+
             //  ApplyPrize(prizeList,firstPlayer);
             //  ApplyPrize(prizeList, secondPlayer);
+
+
+
+        }
+        private void ApplyPrize()
+        {
             for (int i = 0; i < prizeList.Count; i++)
             {
                 Prize prize = prizeList[i];
@@ -367,11 +505,9 @@ namespace DirigibleBattle
                     i--;
                 }
             }
-
-
         }
         int NumberOfPrizes = 0;
-        public void ApplyPrize(List<Prize> prizeList, AbstractDirigible player)
+        private void ApplyPrize(List<Prize> prizeList, AbstractDirigible player)
         {
             for (int i = 0; i < prizeList.Count; i++)
             {
@@ -431,18 +567,18 @@ namespace DirigibleBattle
             }
         }
 
-        public void ShootControl()
+        private void ShootControl()
         {
             // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
             keyboardState = OpenTK.Input.Keyboard.GetState();
 
-            bool firstPlayerFireCommon = keyboardState.IsKeyDown(OpenTK.Input.Key.Z);
-            bool firstPlayerFireFast = keyboardState.IsKeyDown(OpenTK.Input.Key.X);
-            bool firstPlayerFireHeavy = keyboardState.IsKeyDown(OpenTK.Input.Key.C);
+            bool firstPlayerFireCommon = keyboardState.IsKeyDown(firstPlayerFire[0]);
+            bool firstPlayerFireFast = keyboardState.IsKeyDown(firstPlayerFire[1]);
+            bool firstPlayerFireHeavy = keyboardState.IsKeyDown(firstPlayerFire[2]);
 
-            bool secondPlayerFireCommon = keyboardState.IsKeyDown(OpenTK.Input.Key.Insert);
-            bool secondPlayerFireFast = keyboardState.IsKeyDown(OpenTK.Input.Key.PageUp);
-            bool secondPlayerFireHeavy = keyboardState.IsKeyDown(OpenTK.Input.Key.PageDown);
+            bool secondPlayerFireCommon = keyboardState.IsKeyDown(secondPlayerFire[0]);
+            bool secondPlayerFireFast = keyboardState.IsKeyDown(secondPlayerFire[1]);
+            bool secondPlayerFireHeavy = keyboardState.IsKeyDown(secondPlayerFire[2]);
 
 
             //============================Точечная стрельба(без спама)============================//
@@ -512,7 +648,7 @@ namespace DirigibleBattle
             wasFirstPlayerFirePressed = firstPlayerFireCommon || firstPlayerFireFast || firstPlayerFireHeavy;
             wasSecondPlayerFirePressed = secondPlayerFireCommon || secondPlayerFireFast || secondPlayerFireHeavy;
         }
-        public void CheckPlayersDamage()
+        private void CheckPlayersDamage()
         {
             for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
             {
@@ -556,7 +692,7 @@ namespace DirigibleBattle
             }
         }
 
-        public void GameStateCheck()
+        private void GameStateCheck()
         {
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
             {
@@ -581,7 +717,7 @@ namespace DirigibleBattle
                 Close();
             }
         }
-        public void CheckPlayerBuff(AbstractDirigible player)
+        private void CheckPlayerBuff(AbstractDirigible player)
         {
             for (int i = 0; i < prizeList.Count; i++)
             {

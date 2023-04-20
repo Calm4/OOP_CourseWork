@@ -25,7 +25,16 @@ namespace GameLibrary.Dirigible
             Fuel = 5000; //2000
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
+            dirigibleWindEffect = new Vector2(0.0f, 0.0f);
 
+        }
+        public override void ChangeDirectionWithWind(Vector2 newWindSpeed)
+        {
+            dirigibleWindEffect = newWindSpeed;
+        }
+        public override void ChangeWindDirection(bool turnOver)
+        {
+            IsWindWork = turnOver;
         }
         public Vector2 PassiveSpeed { get; set; }
 
@@ -151,9 +160,11 @@ namespace GameLibrary.Dirigible
                 return;
             PositionCenter += movement;
             Fuel--;
+            if (IsWindWork)
+                PositionCenter += dirigibleWindEffect;
         }
 
-      
+
         protected override Vector2[] GetPosition()
         {
             return new Vector2[4]

@@ -56,8 +56,15 @@ namespace GameLibrary.DirigibleDecorators
             _dirigible.GetDamage(damage);
 
         }
-   
-       
+        public override void ChangeDirectionWithWind(Vector2 newWindSpeed)
+        {
+            _dirigible.ChangeDirectionWithWind(newWindSpeed);
+        }
+        public override void ChangeWindDirection(bool turnOver)
+        {
+            _dirigible.ChangeWindDirection(turnOver);
+        }
+
 
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF checkPlayArea)
         {
