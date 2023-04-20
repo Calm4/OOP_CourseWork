@@ -216,52 +216,59 @@ namespace DirigibleBattle
         private const int WindChangeInterval = 5000; // 5 seconds
 
 
-        int windTicks = 0;
+        
         int windCounter = 0;
-        int windCounter2 = 0;
-        float windSpeedFirstPlayer = 0.0f;
+        float windSpeedPlayer = 0.0f;
+        int windIsWork = 4;
+        int windTimerTicks = 100;
 
         private void WindTimer_Tick(object sender, EventArgs e)
         {
-            if (windCounter <= 500)
+            
+
+            if (windIsWork == 4)
             {
-                int windIsWork = random.Next(1, 5);
-                if (windIsWork == 4)
+                if (windCounter <= windTimerTicks)
                 {
-                    windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
-                    firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                    windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
+                    firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
                     firstPlayer.ChangeWindDirection(true);
-                    secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
+                    secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
                     Debug.WriteLine("1: " + windCounter);
                     windCounter++;
                 }
+                else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
+                {
+                    windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
+                    firstPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
+                    firstPlayer.ChangeWindDirection(true);
+                    secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
+                    secondPlayer.ChangeWindDirection(true);
+                    Debug.WriteLine("2: " + windCounter);
+                    windCounter++;
+                 
+                }
                 else
                 {
-                    firstPlayer.ChangeWindDirection(false);
-                    secondPlayer.ChangeWindDirection(false);
+                    windIsWork = random.Next(1, 5);
                     windCounter = 0;
+                    windTimerTicks = random.Next(100, 301);
                 }
-            }
-            else if (windCounter2 <= 500)
-            {
-                windCounter = 0;
-                windCounter2++;
-                windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
-                firstPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedFirstPlayer, 0.0f));
-                firstPlayer.ChangeWindDirection(true);
-                secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedFirstPlayer, 0.0f));
-                secondPlayer.ChangeWindDirection(true);
-                Debug.WriteLine("2: " + windCounter2);
             }
             else
             {
+                 
+                firstPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
                 firstPlayer.ChangeWindDirection(false);
+                secondPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
                 secondPlayer.ChangeWindDirection(false);
-                windCounter = 0;
-                windCounter2 = 0;
+               
             }
+           
+            
         }
+
 
         /*
          *  if (windTicks < 50)
@@ -369,7 +376,7 @@ namespace DirigibleBattle
             CheckPlayersDamage();
             ApplyPrize();
 
-            if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && isFirstPlayerWindLeft) // ?
+            if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && isFirstPlayerWindLeft) 
             {
                 firstPlayer.ChangeWindDirection(false);
             }
