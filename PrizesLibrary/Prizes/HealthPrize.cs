@@ -13,9 +13,9 @@ namespace PrizesLibrary.Prizes
 {
     public class HealthPrize : Prize
     {
-        public HealthPrize(int textureID,Vector2 centerPosition)
+        public HealthPrize(Vector2 centerPosition)
         {
-            this.textureID = textureID;
+            this.textureID = CreateTexture.LoadTexture("healthPrize.png");
             this.centerPosition = centerPosition;
         }
         

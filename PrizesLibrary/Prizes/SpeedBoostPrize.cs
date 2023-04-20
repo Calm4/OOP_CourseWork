@@ -11,9 +11,9 @@ namespace PrizesLibrary.Prizes
 {
     public class SpeedBoostPrize : Prize
     {
-        public SpeedBoostPrize(int textureID, Vector2 centerPosition)
+        public SpeedBoostPrize(Vector2 centerPosition)
         {
-            this.textureID = textureID;
+            this.textureID = CreateTexture.LoadTexture("speedPrize.png"); ;
             this.centerPosition = centerPosition;
         }
 

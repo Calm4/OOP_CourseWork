@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using GameLibrary;
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace PrizesLibrary.Prizes
 {
     public class FuelPrize : Prize
     {
-        public FuelPrize(int textureID, Vector2 centerPosition)
+        public FuelPrize(Vector2 centerPosition)
         {
-            this.textureID = textureID;
+            this.textureID = this.textureID = CreateTexture.LoadTexture("fuelPrize.png");
             this.centerPosition = centerPosition;
         }
     }

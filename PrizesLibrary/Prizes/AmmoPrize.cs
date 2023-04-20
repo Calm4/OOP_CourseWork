@@ -11,9 +11,9 @@ namespace PrizesLibrary.Prizes
 {
     public class AmmoPrize : Prize
     {
-        public AmmoPrize(int textureID, Vector2 centerPosition)
+        public AmmoPrize(Vector2 centerPosition)
         {
-            this.textureID = textureID;
+            this.textureID = this.textureID = CreateTexture.LoadTexture("ammoPrize.png");
             this.centerPosition = centerPosition;
         }
     }

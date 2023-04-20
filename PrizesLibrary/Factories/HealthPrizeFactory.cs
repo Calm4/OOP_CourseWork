@@ -12,9 +12,9 @@ namespace PrizesLibrary.Factories
 {
     public class HealthPrizeFactory : PrizeFactory
     {
-        public override Prize CreatePrize(int textureID,Vector2 centerPosition)
+        /*public override Prize CreatePrize(int textureID,Vector2 centerPosition)
         {
             return new HealthPrize(textureID,centerPosition);
-        }
+        }*/
     }
 }

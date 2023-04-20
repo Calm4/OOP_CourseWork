@@ -51,7 +51,7 @@ namespace DirigibleBattle
         DispatcherTimer prizeTimer;
         DispatcherTimer windTimer;
 
-        PrizeFactory prizeFactory;
+        PrizeFactory prizeFactory = new PrizeFactory(); 
         List<Prize> prizeList = new List<Prize>();
         Random random = new Random();
 
@@ -184,7 +184,7 @@ namespace DirigibleBattle
             secondPlayer = new BasicDirigible(new Vector2(0.5f, 0f), secondDirigibleTextureLeft);
             firstPlayerAmmo = new List<Bullet>();
             secondPlayerAmmo = new List<Bullet>();
-            screenBorderCollider = new RectangleF(0f, 0.1f, 1f, 0.875f);
+            screenBorderCollider = new RectangleF(0f, 0.125f, 1.025f, 0.875f);
             mountineCollider = new RectangleF(0.0f, -0.1f, 1.0f, 0.185f);
         }
         private void StartTimer()
@@ -216,15 +216,15 @@ namespace DirigibleBattle
         private const int WindChangeInterval = 5000; // 5 seconds
 
 
-        
+
         int windCounter = 0;
         float windSpeedPlayer = 0.0f;
         int windIsWork = 4;
-        int windTimerTicks = 100;
+        int windTimerTicks = 50;
+        bool s = false;
 
         private void WindTimer_Tick(object sender, EventArgs e)
         {
-            
 
             if (windIsWork == 4)
             {
@@ -235,7 +235,7 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                    Debug.WriteLine("1: " + windCounter);
+                 //   Debug.WriteLine("1: " + windCounter);
                     windCounter++;
                 }
                 else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
@@ -245,28 +245,34 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                    Debug.WriteLine("2: " + windCounter);
+                   // Debug.WriteLine("2: " + windCounter);
                     windCounter++;
-                 
+
                 }
                 else
                 {
+                    s = true;
                     windIsWork = random.Next(1, 5);
                     windCounter = 0;
                     windTimerTicks = random.Next(100, 301);
                 }
             }
+            if (s)
+            {
+                windIsWork = random.Next(1, 5);
+                
+            }
             else
             {
-                 
+
                 firstPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
                 firstPlayer.ChangeWindDirection(false);
                 secondPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
                 secondPlayer.ChangeWindDirection(false);
-               
+
             }
-           
-            
+
+
         }
 
 
@@ -310,39 +316,10 @@ namespace DirigibleBattle
 
             float randomPosX, randomPosY;
 
-
+            //Debug.WriteLine(prizeList.Count);
             if (prizeList.Count < 3)
             {
-                int prizeNumber = random.Next(0, 5);
-                randomPosX = (float)(random.NextDouble() * 1.5 - 0.75); // -0.75 до 0.75
-                randomPosY = (float)(random.NextDouble() * 1.5 - 0.75); // -0.75 до 0.75
-
-                switch (prizeNumber)
-                {
-                    case 0:
-                        prizeFactory = new AmmoPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(ammoPrizeTexture, new Vector2(randomPosX, randomPosY)));
-
-                        break;
-                    case 1:
-                        prizeFactory = new ArmorPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(armorPrizeTexture, new Vector2(randomPosX, randomPosY)));
-                        break;
-                    case 2:
-                        prizeFactory = new HealthPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(healthPrizeTexture, new Vector2(randomPosX, randomPosY)));
-                        break;
-                    case 3:
-                        prizeFactory = new SpeedBoostPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(speedPrizeTexture, new Vector2(randomPosX, randomPosY)));
-                        break;
-                    case 4:
-                        prizeFactory = new FuelPrizeFactory();
-                        prizeList.Add(prizeFactory.CreatePrize(fuelPrizeTexture, new Vector2(randomPosX, randomPosY)));
-                        break;
-                    default:
-                        break;
-                }
+                prizeList.Add(prizeFactory.AddNewPrize());
             }
             else
             {
@@ -376,21 +353,21 @@ namespace DirigibleBattle
             CheckPlayersDamage();
             ApplyPrize();
 
-            if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && isFirstPlayerWindLeft) 
+            if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && !isFirstPlayerWindLeft)
             {
                 firstPlayer.ChangeWindDirection(false);
             }
-            else if ((firstPlayer.GetCollider().X + secondPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width) && !isFirstPlayerWindLeft)
+            else if ((firstPlayer.GetCollider().X + firstPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width - 0.04f) && !isFirstPlayerWindLeft)
             {
                 firstPlayer.ChangeWindDirection(false);
             }
             else
                 firstPlayer.ChangeWindDirection(true);
-            if ((secondPlayer.GetCollider().X + secondPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width) && !isSecondPlayerWindLeft) // || 
+            if ((secondPlayer.GetCollider().X <= screenBorderCollider.X) && !isSecondPlayerWindLeft)
             {
                 secondPlayer.ChangeWindDirection(false);
             }
-            else if ((secondPlayer.GetCollider().X <= screenBorderCollider.X) && isSecondPlayerWindLeft)
+            else if ((secondPlayer.GetCollider().X + secondPlayer.GetCollider().Width >= screenBorderCollider.X + screenBorderCollider.Width - 0.04f) && !isSecondPlayerWindLeft) // || 
             {
                 secondPlayer.ChangeWindDirection(false);
             }
