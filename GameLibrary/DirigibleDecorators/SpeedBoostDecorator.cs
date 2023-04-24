@@ -11,7 +11,7 @@ namespace GameLibrary.DirigibleDecorators
     public class SpeedBoostDecorator : DirigibleDecorator
     {
         private float _extraSpeed;
-        private const float _maxSpeed = 0.0175f;
+        private const float _maxSpeed = 0.02f;
         public SpeedBoostDecorator(AbstractDirigible dirigible, float extraSpeed) : base(dirigible)
         {
             _extraSpeed = extraSpeed;

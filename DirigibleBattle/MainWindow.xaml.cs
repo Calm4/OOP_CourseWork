@@ -51,7 +51,7 @@ namespace DirigibleBattle
         DispatcherTimer prizeTimer;
         DispatcherTimer windTimer;
 
-        PrizeFactory prizeFactory = new PrizeFactory(); 
+        PrizeFactory prizeFactory = new PrizeFactory();
         List<Prize> prizeList = new List<Prize>();
         Random random = new Random();
 
@@ -106,53 +106,12 @@ namespace DirigibleBattle
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
             GameSettings();
             AddTexture();
             AddObjects();
             StartTimer();
-
-            AbstractDirigible bd = new BasicDirigible(new Vector2(0f, 0f), firstDirigibleTextureLeft);
-            /* Debug.WriteLine(bd.Health); //100
-             Debug.WriteLine(bd.Armor); // 50
-             bd.GetDamage(40);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //100
-             Debug.WriteLine(bd.Armor); //10
-             bd.GetDamage(40);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //70
-             Debug.WriteLine(bd.Armor); //0
-             bd = new ArmorBoostDecorator(bd, 20);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //70
-             Debug.WriteLine(bd.Armor); //20
-             bd = new HealthBoostDecorator(bd, 50);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //120
-             Debug.WriteLine(bd.Armor); //20
-             bd.GetDamage(40);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //100
-             Debug.WriteLine(bd.Armor); //0
-             bd.GetDamage(40);
-             Debug.WriteLine("=========================");
-             Debug.WriteLine(bd.Health); //60
-             Debug.WriteLine(bd.Armor); //0*/
-
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Ammo); //10
-
-            bd = new AmmoBoostDecorator(bd, 5);
-
-            Debug.WriteLine("=========================");
-            Debug.WriteLine(bd.Ammo); //15
-
-
-
-
-
         }
-
 
         private void GameSettings()
         {
@@ -204,19 +163,6 @@ namespace DirigibleBattle
         }
         bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
         bool isSecondPlayerWindLeft = false;
-        private const float smoothingFactor = 0.75f; // Коэффициент сглаживания
-        private const int SpeedHistoryLength = 5;
-        private Queue<Vector2> firstPlayerSpeedHistory = new Queue<Vector2>();
-        private Queue<Vector2> secondPlayerSpeedHistory = new Queue<Vector2>();
-
-
-
-
-
-        private const int WindChangeInterval = 5000; // 5 seconds
-
-
-
         int windCounter = 0;
         float windSpeedPlayer = 0.0f;
         int windIsWork = 4;
@@ -235,7 +181,7 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                 //   Debug.WriteLine("1: " + windCounter);
+                    //   Debug.WriteLine("1: " + windCounter);
                     windCounter++;
                 }
                 else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
@@ -245,7 +191,7 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                   // Debug.WriteLine("2: " + windCounter);
+                    // Debug.WriteLine("2: " + windCounter);
                     windCounter++;
 
                 }
@@ -260,7 +206,7 @@ namespace DirigibleBattle
             if (s)
             {
                 windIsWork = random.Next(1, 5);
-                
+
             }
             else
             {
@@ -313,10 +259,6 @@ namespace DirigibleBattle
 
         private void PrizeGenerate()
         {
-
-            float randomPosX, randomPosY;
-
-            //Debug.WriteLine(prizeList.Count);
             if (prizeList.Count < 3)
             {
                 prizeList.Add(prizeFactory.AddNewPrize());
@@ -335,6 +277,14 @@ namespace DirigibleBattle
 
             secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight, screenBorderCollider);
 
+            firstPlayerInfo.Content = $"HP:{firstPlayer.Health}\nArmor:{firstPlayer.Armor}\n" +
+                                        $"Ammo:{firstPlayer.Ammo}\nSpeed:{(firstPlayer.Speed * 100).ToString("F1")}\n" +
+                                        $"Fuel:{firstPlayer.Fuel}\nPrizes:{numberOfFirstPlayerPrizes}/15\n";
+
+            secondPlayerInfo.Content = $"HP:{secondPlayer.Health}\nArmor:{secondPlayer.Armor}\n" +
+                                        $"Ammo:{secondPlayer.Ammo}\nSpeed:{(secondPlayer.Speed * 100).ToString("F1")}\n" +
+                                        $"Fuel:{secondPlayer.Fuel}\nPrizes:{numberOfSecondPlayerPrizes}/15\n";
+
 
             glControl.InvalidateVisual();
 
@@ -347,12 +297,16 @@ namespace DirigibleBattle
         private void GameRender()
         {
             // что бы игра не была бесконечной, игрок может подобрать только до 15 призов
-            firstPlayer.Idle();
-            secondPlayer.Idle();
+
             GameStateCheck();
             CheckPlayersDamage();
             ApplyPrize();
-
+            WindDirection();
+            //  ApplyPrize(prizeList,firstPlayer);
+            //  ApplyPrize(prizeList, secondPlayer);
+        }
+        public void WindDirection()
+        {
             if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && !isFirstPlayerWindLeft)
             {
                 firstPlayer.ChangeWindDirection(false);
@@ -373,12 +327,6 @@ namespace DirigibleBattle
             }
             else
                 secondPlayer.ChangeWindDirection(true);
-
-            //  ApplyPrize(prizeList,firstPlayer);
-            //  ApplyPrize(prizeList, secondPlayer);
-
-
-
         }
         private void ApplyPrize()
         {
@@ -636,10 +584,7 @@ namespace DirigibleBattle
         {
             for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
             {
-
                 firstPlayerAmmo[i].Fire();
-
-
                 if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
                 {
                     secondPlayer.GetDamage(firstPlayerAmmo[i].Damage);
@@ -678,6 +623,7 @@ namespace DirigibleBattle
 
         private void GameStateCheck()
         {
+          
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
             {
                 gameTimer.Stop();
@@ -782,10 +728,5 @@ namespace DirigibleBattle
                 prize.Render();
             }
         }
-
-
-
-
-
     }
 }

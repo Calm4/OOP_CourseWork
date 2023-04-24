@@ -116,16 +116,11 @@ namespace GameLibrary.Dirigible
             {
                 gunPosition.X = PositionCenter.X - gunOffset.X;
             }
-
             return gunPosition;
         }
-
-
-
-
         public override void GetDamage(int damage)
         {
-            int tempHealth = damage - Armor; // 30 - 20 = 10
+            int tempHealth = damage - Armor;
             if (Armor > 0)
             {
                 if (Armor > damage)
@@ -142,7 +137,7 @@ namespace GameLibrary.Dirigible
             {
                 Health -= damage;
             }
-            // Health -= damage;
+
         }
 
         public override void Idle()
@@ -162,44 +157,6 @@ namespace GameLibrary.Dirigible
             Fuel--;
             if (IsWindWork)
                 PositionCenter += dirigibleWindEffect;
-        }
-
-
-        protected override Vector2[] GetPosition()
-        {
-            return new Vector2[4]
-           {
-                PositionCenter + new Vector2(-0.07f, -0.12f),
-                PositionCenter + new Vector2(0.07f, -0.12f),
-                PositionCenter + new Vector2(0.07f, 0.12f),
-                PositionCenter + new Vector2(-0.07f, 0.12f),
-           };
-        }
-
-        public override RectangleF GetCollider()
-        {
-            Vector2[] colliderPosition = GetPosition();
-
-            float colliderWidth = (colliderPosition[2].X - colliderPosition[3].X) / 2.0f;
-            float colliderHeight = (colliderPosition[3].Y - colliderPosition[0].Y) / 2.0f;
-
-            float[] convertedLeftTop = Convert(colliderPosition[3].X, colliderPosition[3].Y);
-
-            RectangleF collider = new RectangleF(convertedLeftTop[0], convertedLeftTop[1], colliderWidth - 0.005f, colliderHeight - 0.03f);
-
-            return collider;
-        }
-        protected override float[] Convert(float pointX, float pointY)
-        {
-            float centralPointX = 0.5f;
-            float centralPointY = 0.5f;
-
-            float[] resultPoint = new float[2];
-
-            resultPoint[0] = centralPointX + pointX / 2.0f;
-            resultPoint[1] = centralPointY - pointY / 2.0f;
-
-            return resultPoint;
         }
     }
 }
