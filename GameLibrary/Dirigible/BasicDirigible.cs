@@ -37,7 +37,6 @@ namespace GameLibrary.Dirigible
             IsWindWork = turnOver;
         }
         public Vector2 PassiveSpeed { get; set; }
-
         public override int Health { get; set; }
         public override int Armor { get; set; }
         public override int Fuel { get; set; }
@@ -54,8 +53,7 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[0]) && (GetCollider().Y < playArea.Width - playArea.Y))
             {
-                                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
-
+                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
             }
             if (keyboardState.IsKeyDown(keys[1]))
             {
@@ -64,7 +62,7 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[2]) && (GetCollider().X > playArea.X))
             {
-                                DirigibleID = textureIdLeft;
+                DirigibleID = textureIdLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
@@ -89,7 +87,7 @@ namespace GameLibrary.Dirigible
             // Если дирижабль смотрит влево, инвертируем координату X позиции пушки
             if (!IsShoot)
                 gunPosition.X = PositionCenter.X - gunOffset.X;
-            
+
             return gunPosition;
         }
         public override void GetDamage(int damage)
