@@ -20,9 +20,9 @@ namespace GameLibrary.Dirigible
 
             Health = 100;
             Armor = 50;
-            Ammo = 15;
+            Ammo = 30;
             Speed = 0.01f; // ????
-            Fuel = 5000; //2000
+            Fuel = 3000; //2000
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
             dirigibleWindEffect = new Vector2(0.0f, 0.0f);
@@ -54,8 +54,7 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[0]) && (GetCollider().Y < playArea.Width - playArea.Y))
             {
-
-                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
+                                moveVectorFirstPlayer += new Vector2(0f, -0.001f);
 
             }
             if (keyboardState.IsKeyDown(keys[1]))
@@ -65,8 +64,7 @@ namespace GameLibrary.Dirigible
 
             if (keyboardState.IsKeyDown(keys[2]) && (GetCollider().X > playArea.X))
             {
-
-                DirigibleID = textureIdLeft;
+                                DirigibleID = textureIdLeft;
                 moveVectorFirstPlayer += new Vector2(-0.001f, 0f);
             }
 
@@ -83,29 +81,6 @@ namespace GameLibrary.Dirigible
             Move(moveVectorFirstPlayer);
         }
 
-        /* public override void Shoot(List<Key> keys, int[] texture, KeyboardState keyboardState)
-         {
-             keyboardState = OpenTK.Input.Keyboard.GetState();
-
-             bool direction = false;
-
-             bool playerFire = keyboardState.IsKeyDown(OpenTK.Input.Key.Space);
-
-
-
-             //============================Точечная стрельба(без спама)============================//
-             if (!IsShoot && playerFire)
-             {
-                // PlayerAmmo.Add(new CommonBullet(firstPlayer.PositionCenter - new Vector2(0f, -0.05f), commonBulletTexture, true));
-             }
-
-
-
-
-             IsShoot = playerFire;
-
-
-         }*/
         public override Vector2 GetGunPosition()
         {
             // Позиция пушки относительно координат дирижабля
@@ -113,9 +88,8 @@ namespace GameLibrary.Dirigible
 
             // Если дирижабль смотрит влево, инвертируем координату X позиции пушки
             if (!IsShoot)
-            {
                 gunPosition.X = PositionCenter.X - gunOffset.X;
-            }
+            
             return gunPosition;
         }
         public override void GetDamage(int damage)
@@ -143,9 +117,7 @@ namespace GameLibrary.Dirigible
         public override void Idle()
         {
             IsMove = true;
-
             PositionCenter += PassiveSpeed;
-
             IsMove = false;
         }
 

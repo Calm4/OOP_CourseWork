@@ -12,7 +12,7 @@ namespace GameLibrary.DirigibleDecorators
     public class HealthBoostDecorator : DirigibleDecorator
     {
         private int _extraHealth;
-        private const int _maxHealth = 250;
+        private const int _maxHealth = 200;
         public HealthBoostDecorator(AbstractDirigible dirigible, int extraHealth) : base(dirigible)
         {
             _extraHealth = extraHealth;

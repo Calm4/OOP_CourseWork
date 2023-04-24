@@ -51,9 +51,9 @@ namespace DirigibleBattle
         DispatcherTimer prizeTimer;
         DispatcherTimer windTimer;
 
-        PrizeFactory prizeFactory = new PrizeFactory();
-        List<Prize> prizeList = new List<Prize>();
-        Random random = new Random();
+        readonly PrizeFactory prizeFactory = new PrizeFactory();
+        readonly List<Prize> prizeList = new List<Prize>();
+        readonly Random random = new Random();
 
         RectangleF mountineCollider;
         RectangleF screenBorderCollider;
@@ -62,17 +62,14 @@ namespace DirigibleBattle
         int backGroundTexture;
         int mountainRange;
 
-        int commonBulletTexture;
+        private int numberOfFirstPlayerPrizes = 0;
+        private int numberOfSecondPlayerPrizes = 0;
 
+        int commonBulletTexture;
         int firstDirigibleTextureRight;
         int firstDirigibleTextureLeft;
         int secondDirigibleTextureRight;
         int secondDirigibleTextureLeft;
-        int ammoPrizeTexture;
-        int armorPrizeTexture;
-        int fuelPrizeTexture;
-        int healthPrizeTexture;
-        int speedPrizeTexture;
 
         readonly List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
             {
@@ -105,8 +102,8 @@ namespace DirigibleBattle
 
         public MainWindow()
         {
+            
             InitializeComponent();
-            DataContext = this;
             GameSettings();
             AddTexture();
             AddObjects();
@@ -129,13 +126,8 @@ namespace DirigibleBattle
             secondDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_blue_right_side.png");
             secondDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_blue_left_side.png");
             commonBulletTexture = CreateTexture.LoadTexture("CommonPulya.png");
-            backGroundTexture = CreateTexture.LoadTexture("sky.png");
-            mountainRange = CreateTexture.LoadTexture("mountine.png");
-            ammoPrizeTexture = CreateTexture.LoadTexture("ammoPrize.png");
-            armorPrizeTexture = CreateTexture.LoadTexture("armorPrize.png");
-            fuelPrizeTexture = CreateTexture.LoadTexture("fuelPrize.png");
-            healthPrizeTexture = CreateTexture.LoadTexture("healthPrize.png");
-            speedPrizeTexture = CreateTexture.LoadTexture("speedPrize.png");
+            backGroundTexture = CreateTexture.LoadTexture("clouds2.png");
+            mountainRange = CreateTexture.LoadTexture("mountine2.png");
         }
         private void AddObjects()
         {
@@ -148,30 +140,30 @@ namespace DirigibleBattle
         }
         private void StartTimer()
         {
-            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) }; // ~100 FPS
+            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; // ~100 FPS
             gameTimer.Tick += GameTimer_Tick;
 
-            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16.0) }; // ~60
+            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; // ~60
             prizeTimer.Tick += PrizeTimer_Tick;
 
-            windTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10.0) };
+            windTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) };
             windTimer.Tick += WindTimer_Tick;
 
             gameTimer.Start();
             prizeTimer.Start();
             windTimer.Start();
         }
-        bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
-        bool isSecondPlayerWindLeft = false;
-        int windCounter = 0;
-        float windSpeedPlayer = 0.0f;
-        int windIsWork = 4;
-        int windTimerTicks = 50;
-        bool s = false;
 
+        // ПОДУМАТЬ О РЕАЛИЗАЦИИ ВЕТРА
+        readonly private bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
+        readonly private bool isSecondPlayerWindLeft = false;
+        private int windCounter = 0;
+        private float windSpeedPlayer = 0.0f;
+        private int windIsWork = 4;
+        private int windTimerTicks = 50;
+        private bool s = false;
         private void WindTimer_Tick(object sender, EventArgs e)
         {
-
             if (windIsWork == 4)
             {
                 if (windCounter <= windTimerTicks)
@@ -181,7 +173,6 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                    //   Debug.WriteLine("1: " + windCounter);
                     windCounter++;
                 }
                 else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
@@ -191,9 +182,7 @@ namespace DirigibleBattle
                     firstPlayer.ChangeWindDirection(true);
                     secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
                     secondPlayer.ChangeWindDirection(true);
-                    // Debug.WriteLine("2: " + windCounter);
                     windCounter++;
-
                 }
                 else
                 {
@@ -203,109 +192,62 @@ namespace DirigibleBattle
                     windTimerTicks = random.Next(100, 301);
                 }
             }
-            if (s)
-            {
-                windIsWork = random.Next(1, 5);
-
-            }
             else
             {
 
-                firstPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
-                firstPlayer.ChangeWindDirection(false);
-                secondPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
-                secondPlayer.ChangeWindDirection(false);
-
+                if (s)
+                {
+                    windIsWork = random.Next(1, 5);
+                }
+                else
+                {
+                    firstPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
+                    firstPlayer.ChangeWindDirection(false);
+                    secondPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
+                    secondPlayer.ChangeWindDirection(false);
+                }
             }
-
-
         }
-
-
-        /*
-         *  if (windTicks < 50)
-                    {
-                        int windIsWork = random.Next(1, 5);
-                        if (windIsWork == 4)
-                        {
-                            int windDirection1 = random.Next(0, 2); // 0 - влево, 1 - вправо
-                            float windSpeedFirstPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
-                            if (windDirection1 == 1)
-                            {
-                                windSpeedFirstPlayer = -windSpeedFirstPlayer;
-                            }
-
-                            firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
-                            firstPlayer.ChangeWindDirection(true);
-                            secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedFirstPlayer, 0.0f));
-                            secondPlayer.ChangeWindDirection(true);
-                        }
-                        windTicks++;
-                    }
-                    else
-                    {
-                        firstPlayer.ChangeWindDirection(false);
-                        secondPlayer.ChangeWindDirection(false);
-                        windTicks = 0;
-                        return;
-                    }
-            */
-
-
         private void PrizeTimer_Tick(object sender, EventArgs e)
-        {
-            PrizeGenerate();
-        }
-
-        private void PrizeGenerate()
         {
             if (prizeList.Count < 3)
             {
                 prizeList.Add(prizeFactory.AddNewPrize());
             }
-            else
-            {
-                return;
-            }
         }
+
         private void GameTimer_Tick(object sender, EventArgs e)
         {
-            GameRender();
-            ShootControl();
+            // что бы игра не была бесконечной, игрок может подобрать только до 15 призов
+            GameStateCheck();
+
+            CheckPlayerDamage(firstPlayerAmmo, ref secondPlayer);
+            CheckPlayerDamage(secondPlayerAmmo, ref firstPlayer);
+
+            ApplyPrize(prizeList, ref firstPlayer, ref numberOfFirstPlayerPrizes);
+            ApplyPrize(prizeList, ref secondPlayer, ref numberOfSecondPlayerPrizes);
+
+            WindDirection();
+
+            PlayerShootControl(firstPlayerFire, firstPlayerAmmo, ref firstPlayer);
+            PlayerShootControl(secondPlayerFire, secondPlayerAmmo, ref secondPlayer);
+
+            firstPlayer.Idle();
+            secondPlayer.Idle();
 
             firstPlayer.Control(firstPlayerInput, firstDirigibleTextureLeft, firstDirigibleTextureRight, screenBorderCollider);
-
             secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight, screenBorderCollider);
 
-            firstPlayerInfo.Content = $"HP:{firstPlayer.Health}\nArmor:{firstPlayer.Armor}\n" +
-                                        $"Ammo:{firstPlayer.Ammo}\nSpeed:{(firstPlayer.Speed * 100).ToString("F1")}\n" +
-                                        $"Fuel:{firstPlayer.Fuel}\nPrizes:{numberOfFirstPlayerPrizes}/15\n";
+            firstPlayerInfo.Content = $"HP:{firstPlayer.Health}/200\nArmor:{firstPlayer.Armor}/50\n" +
+                                        $"Ammo:{firstPlayer.Ammo}/30\nSpeed:{firstPlayer.Speed * 100:F1}x/2.0x\n" +
+                                        $"Fuel:{firstPlayer.Fuel}/3000\nPrizes:{numberOfFirstPlayerPrizes}/15\n";
 
-            secondPlayerInfo.Content = $"HP:{secondPlayer.Health}\nArmor:{secondPlayer.Armor}\n" +
-                                        $"Ammo:{secondPlayer.Ammo}\nSpeed:{(secondPlayer.Speed * 100).ToString("F1")}\n" +
-                                        $"Fuel:{secondPlayer.Fuel}\nPrizes:{numberOfSecondPlayerPrizes}/15\n";
+            secondPlayerInfo.Content = $"HP:{secondPlayer.Health}/200\nArmor:{secondPlayer.Armor}/50\n" +
+                                        $"Ammo:{secondPlayer.Ammo}/30\nSpeed:{secondPlayer.Speed * 100:F1}x/2.0x\n" +
+                                        $"Fuel:{secondPlayer.Fuel}/3000\nPrizes:{numberOfSecondPlayerPrizes}/15\n";
 
-
-            glControl.InvalidateVisual();
-
-
-            //Debug.WriteLine(firstPlayer.Fuel);
         }
-
-        int numberOfFirstPlayerPrizes = 0;
-        int numberOfSecondPlayerPrizes = 0;
-        private void GameRender()
-        {
-            // что бы игра не была бесконечной, игрок может подобрать только до 15 призов
-
-            GameStateCheck();
-            CheckPlayersDamage();
-            ApplyPrize();
-            WindDirection();
-            //  ApplyPrize(prizeList,firstPlayer);
-            //  ApplyPrize(prizeList, secondPlayer);
-        }
-        public void WindDirection()
+        private void WindDirection()
         {
             if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && !isFirstPlayerWindLeft)
             {
@@ -328,170 +270,43 @@ namespace DirigibleBattle
             else
                 secondPlayer.ChangeWindDirection(true);
         }
-        private void ApplyPrize()
+        private void ApplyPrize(List<Prize> prizeList, ref AbstractDirigible player, ref int prizeCounter)
         {
             for (int i = 0; i < prizeList.Count; i++)
             {
                 Prize prize = prizeList[i];
 
-                if (firstPlayer.GetCollider().IntersectsWith(prize.GetCollider()) && numberOfFirstPlayerPrizes < 15)
-                {
-                    numberOfFirstPlayerPrizes++;
-                    if (prize.GetType().Equals(typeof(AmmoPrize)))
-                    {
-                        int ammoBoostCount = random.Next(2, 6);
-                        firstPlayer = new AmmoBoostDecorator(firstPlayer, ammoBoostCount);
-                        Debug.WriteLine("ammo:" + firstPlayer.Ammo);
-                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
-
-                    }
-                    if (prize.GetType().Equals(typeof(ArmorPrize)))
-                    {
-                        int armorBoostCount = random.Next(10, 31);
-                        firstPlayer = new ArmorBoostDecorator(firstPlayer, armorBoostCount);
-
-                        Debug.WriteLine("arrmor:" + firstPlayer.Armor);
-                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
-
-                    }
-                    if (prize.GetType().Equals(typeof(FuelPrize)))
-                    {
-                        int fuelBoostCount = random.Next(500, 1001);
-                        firstPlayer = new FuelBoostDecorator(firstPlayer, fuelBoostCount);
-
-                        Debug.WriteLine("fuel:" + firstPlayer.Fuel);
-                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
-
-                    }
-                    if (prize.GetType().Equals(typeof(HealthPrize)))
-                    {
-                        int healthBoostCount = random.Next(10, 31);
-                        firstPlayer = new HealthBoostDecorator(firstPlayer, healthBoostCount);
-
-                        Debug.WriteLine("hp:" + firstPlayer.Health);
-                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
-
-                    }
-                    if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
-                    {
-                        float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
-                        firstPlayer = new SpeedBoostDecorator(firstPlayer, speedBoostCount);
-
-                        Debug.WriteLine("speed:" + firstPlayer.Speed);
-                        Debug.WriteLine("NUMBER:" + numberOfFirstPlayerPrizes);
-
-                    }
-                    prizeList.Remove(prize);
-                    i--;
-                }
-
-            }
-            for (int i = 0; i < prizeList.Count; i++)
-            {
-                Prize prize = prizeList[i];
-
-                if (secondPlayer.GetCollider().IntersectsWith(prize.GetCollider()) && numberOfSecondPlayerPrizes < 15)
+                if (player.GetCollider().IntersectsWith(prize.GetCollider()) && prizeCounter < 15)
                 {
                     if (prize.GetType().Equals(typeof(AmmoPrize)))
                     {
-
-                        int ammoBoostCount = random.Next(2, 6);
-                        secondPlayer = new AmmoBoostDecorator(secondPlayer, ammoBoostCount);
-                        numberOfSecondPlayerPrizes++;
-                        Debug.WriteLine("ammo:" + secondPlayer.Ammo);
-
-                    }
-                    if (prize.GetType().Equals(typeof(ArmorPrize)))
-                    {
-                        int armorBoostCount = random.Next(10, 31);
-                        secondPlayer = new ArmorBoostDecorator(secondPlayer, armorBoostCount);
-                        numberOfSecondPlayerPrizes++;
-                        Debug.WriteLine("arrmor:" + secondPlayer.Armor);
-
-                    }
-                    if (prize.GetType().Equals(typeof(FuelPrize)))
-                    {
-                        int fuelBoostCount = random.Next(500, 1001);
-                        secondPlayer = new FuelBoostDecorator(secondPlayer, fuelBoostCount);
-                        numberOfSecondPlayerPrizes++;
-                        Debug.WriteLine("fuel:" + secondPlayer.Fuel);
-
-                    }
-                    if (prize.GetType().Equals(typeof(HealthPrize)))
-                    {
-                        int healthBoostCount = random.Next(10, 41);
-                        secondPlayer = new HealthBoostDecorator(secondPlayer, healthBoostCount);
-                        numberOfSecondPlayerPrizes++;
-                        Debug.WriteLine("hp:" + secondPlayer.Health);
-
-                    }
-                    if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
-                    {
-                        float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
-                        secondPlayer = new SpeedBoostDecorator(secondPlayer, speedBoostCount);
-                        numberOfSecondPlayerPrizes++;
-                        Debug.WriteLine("speed:" + secondPlayer.Speed);
-
-                    }
-                    prizeList.Remove(prize);
-                    i--;
-                }
-            }
-        }
-        int NumberOfPrizes = 0;
-        private void ApplyPrize(List<Prize> prizeList, AbstractDirigible player)
-        {
-            for (int i = 0; i < prizeList.Count; i++)
-            {
-                Prize prize = prizeList[i];
-
-                if (player.GetCollider().IntersectsWith(prize.GetCollider()) && NumberOfPrizes < 15)
-                {
-                    NumberOfPrizes++;
-                    if (prize.GetType().Equals(typeof(AmmoPrize)))
-                    {
-
                         int ammoBoostCount = random.Next(2, 6);
                         player = new AmmoBoostDecorator(player, ammoBoostCount);
-                        Debug.WriteLine("ammo:" + player.Ammo);
-                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
-
+                        prizeCounter++;
                     }
                     if (prize.GetType().Equals(typeof(ArmorPrize)))
                     {
                         int armorBoostCount = random.Next(10, 31);
                         player = new ArmorBoostDecorator(player, armorBoostCount);
-
-                        Debug.WriteLine("arrmor:" + player.Armor);
-                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
-
+                        prizeCounter++;
                     }
                     if (prize.GetType().Equals(typeof(FuelPrize)))
                     {
-                        int fuelBoostCount = random.Next(500, 1001);
+                        int fuelBoostCount = random.Next(250, 751);
                         player = new FuelBoostDecorator(player, fuelBoostCount);
-
-                        Debug.WriteLine("fuel:" + player.Fuel);
-                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
-
+                        prizeCounter++;
                     }
                     if (prize.GetType().Equals(typeof(HealthPrize)))
                     {
                         int healthBoostCount = random.Next(10, 31);
                         player = new HealthBoostDecorator(player, healthBoostCount);
-
-                        Debug.WriteLine("hp:" + player.Health);
-                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
-
+                        prizeCounter++;
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
                         float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
                         player = new SpeedBoostDecorator(player, speedBoostCount);
-
-                        Debug.WriteLine("speed:" + player.Speed);
-                        Debug.WriteLine("NUMBER:" + NumberOfPrizes);
-
+                        prizeCounter++;
                     }
                     prizeList.Remove(prize);
                     i--;
@@ -499,131 +314,76 @@ namespace DirigibleBattle
             }
         }
 
-        private void ShootControl()
+        private void PlayerShootControl(List<OpenTK.Input.Key> keys, List<Bullet> bulletsList, ref AbstractDirigible player)
         {
-            // КАК-ТО ПОПЫТАТЬСЯ ВЫНЕСТИ СТРЕЛЬБУ В МЕТОД ДИРИЖАБЛЯ, НО РЕШИВ ПРОБЛЕМУ С ССЫЛКАМИ
             keyboardState = OpenTK.Input.Keyboard.GetState();
 
-            bool firstPlayerFireCommon = keyboardState.IsKeyDown(firstPlayerFire[0]);
-            bool firstPlayerFireFast = keyboardState.IsKeyDown(firstPlayerFire[1]);
-            bool firstPlayerFireHeavy = keyboardState.IsKeyDown(firstPlayerFire[2]);
+            bool playerFireCommon = keyboardState.IsKeyDown(keys[0]);
+            bool playerFireFast = keyboardState.IsKeyDown(keys[1]);
+            bool playerFireHeavy = keyboardState.IsKeyDown(keys[2]);
 
-            bool secondPlayerFireCommon = keyboardState.IsKeyDown(secondPlayerFire[0]);
-            bool secondPlayerFireFast = keyboardState.IsKeyDown(secondPlayerFire[1]);
-            bool secondPlayerFireHeavy = keyboardState.IsKeyDown(secondPlayerFire[2]);
+            bool wasPlayerFirePressed = (player == firstPlayer) ? wasFirstPlayerFirePressed : wasSecondPlayerFirePressed;
 
-
-            //============================Точечная стрельба(без спама)============================//
-            if (!wasFirstPlayerFirePressed && (firstPlayerFireCommon || firstPlayerFireFast || firstPlayerFireHeavy))
+            if (!wasPlayerFirePressed && (playerFireCommon || playerFireFast || playerFireHeavy))
             {
-                if (firstPlayer.Ammo > 0)
+                if (player.Ammo > 0)
                 {
-                    if (firstPlayerFireCommon)
+                    if (playerFireCommon)
                     {
-                        firstPlayerAmmo.Add(new CommonBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
-                        firstPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
-
+                        bulletsList.Add(new CommonBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
                     }
-                    if (firstPlayerFireFast)
+                    if (playerFireFast)
                     {
-                        firstPlayerAmmo.Add(new FastBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
-                        firstPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
-
+                        bulletsList.Add(new FastBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
                     }
-                    if (firstPlayerFireHeavy)
+                    if (playerFireHeavy)
                     {
-                        firstPlayerAmmo.Add(new HeavyBullet(firstPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, firstPlayer.DirigibleID == firstDirigibleTextureRight));
-                        firstPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + firstPlayer.Ammo);
-
+                        bulletsList.Add(new HeavyBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
                     }
+                    player.Ammo--;
+                }
+                if (player == firstPlayer)
+                {
+                    wasFirstPlayerFirePressed = true;
                 }
                 else
                 {
-                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
+                    wasSecondPlayerFirePressed = true;
                 }
             }
-            if (!wasSecondPlayerFirePressed && (secondPlayerFireCommon || secondPlayerFireFast || secondPlayerFireHeavy))
+            else if (wasPlayerFirePressed && !(playerFireCommon || playerFireFast || playerFireHeavy))
             {
-                if (secondPlayer.Ammo > 0)
+                if (player == firstPlayer)
                 {
-                    if (secondPlayerFireCommon)
-                    {
-                        secondPlayerAmmo.Add(new CommonBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
-                        secondPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
-
-                    }
-                    if (secondPlayerFireFast)
-                    {
-                        secondPlayerAmmo.Add(new FastBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
-                        secondPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
-
-                    }
-                    if (secondPlayerFireHeavy)
-                    {
-                        secondPlayerAmmo.Add(new HeavyBullet(secondPlayer.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, secondPlayer.DirigibleID == secondDirigibleTextureRight));
-                        secondPlayer.Ammo--;
-                        Debug.WriteLine("Кол-во пуль: " + secondPlayer.Ammo);
-
-                    }
+                    wasFirstPlayerFirePressed = false;
                 }
                 else
                 {
-                    Debug.WriteLine("НЕДОСТАТОЧНО ПУЛЬ!");
+                    wasSecondPlayerFirePressed = false;
                 }
             }
-
-            wasFirstPlayerFirePressed = firstPlayerFireCommon || firstPlayerFireFast || firstPlayerFireHeavy;
-            wasSecondPlayerFirePressed = secondPlayerFireCommon || secondPlayerFireFast || secondPlayerFireHeavy;
         }
-        private void CheckPlayersDamage()
+        public void CheckPlayerDamage(List<Bullet> bulletList, ref AbstractDirigible player)
         {
-            for (int i = firstPlayerAmmo.Count - 1; i >= 0; i--)
+            for (int i = bulletList.Count - 1; i >= 0; i--)
             {
-                firstPlayerAmmo[i].Fire();
-                if (secondPlayer.GetCollider().IntersectsWith(firstPlayerAmmo[i].GetCollider()))
+                bulletList[i].Fire();
+
+                if (player.GetCollider().IntersectsWith(bulletList[i].GetCollider()))
                 {
-                    secondPlayer.GetDamage(firstPlayerAmmo[i].Damage);
-                    Debug.WriteLine("Health: " + secondPlayer.Health);
-                    Debug.WriteLine("Armor: " + secondPlayer.Armor);
-                    firstPlayerAmmo.RemoveAt(i);
+                    player.GetDamage(bulletList[i].Damage);
+                    bulletList.RemoveAt(i);
                     continue;
                 }
-
-                if (!firstPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
+                if (!bulletList[i].GetCollider().IntersectsWith(screenBorderCollider))
                 {
-                    firstPlayerAmmo.RemoveAt(i);
-                }
-            }
-
-            for (int i = secondPlayerAmmo.Count - 1; i >= 0; i--)
-            {
-                secondPlayerAmmo[i].Fire();
-
-
-                if (firstPlayer.GetCollider().IntersectsWith(secondPlayerAmmo[i].GetCollider()))
-                {
-                    firstPlayer.GetDamage(secondPlayerAmmo[i].Damage);
-                    Debug.WriteLine("Health: " + firstPlayer.Health);
-                    Debug.WriteLine("Armor: " + firstPlayer.Armor);
-                    secondPlayerAmmo.RemoveAt(i);
-                    continue;
-                }
-
-                if (!secondPlayerAmmo[i].GetCollider().IntersectsWith(screenBorderCollider))
-                {
-                    secondPlayerAmmo.RemoveAt(i);
+                    bulletList.RemoveAt(i);
                 }
             }
         }
-
         private void GameStateCheck()
         {
-          
+
             if (firstPlayer.GetCollider().IntersectsWith(secondPlayer.GetCollider()))
             {
                 gameTimer.Stop();
@@ -635,65 +395,19 @@ namespace DirigibleBattle
             if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || firstPlayer.Health <= 0)
             {
                 gameTimer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА СИНЕМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
+                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ\n\tИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
                                         MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || secondPlayer.Health <= 0)
             {
                 gameTimer.Stop();
-                MessageBox.Show("ПОБЕДИЛ ИГРОК НА КРАСНОМ ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
+                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ\n\tИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
                                     MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
         }
-        private void CheckPlayerBuff(AbstractDirigible player)
-        {
-            for (int i = 0; i < prizeList.Count; i++)
-            {
-                Prize prize = prizeList[i];
-
-                if (player.GetCollider().IntersectsWith(prize.GetCollider()))
-                {
-                    if (prize.GetType().Equals(typeof(AmmoPrize)))
-                    {
-                        player = new AmmoBoostDecorator(player, 5);
-
-                        Debug.WriteLine("ammo:" + player.Ammo);
-
-                    }
-                    if (prize.GetType().Equals(typeof(ArmorPrize)))
-                    {
-                        player = new ArmorBoostDecorator(player, 20);
-                        Debug.WriteLine("arrmor:" + player.Armor);
-
-                    }
-                    if (prize.GetType().Equals(typeof(FuelPrize)))
-                    {
-                        player = new FuelBoostDecorator(player, 200);
-
-                        Debug.WriteLine("fuel:" + player.Fuel);
-
-                    }
-                    if (prize.GetType().Equals(typeof(HealthPrize)))
-                    {
-                        player = new HealthBoostDecorator(player, 50);
-                        Debug.WriteLine("hp:" + player.Health);
-
-                    }
-                    if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
-                    {
-                        player = new SpeedBoostDecorator(player, 0.005f);
-                        Debug.WriteLine("speed:" + player.Speed);
-
-                    }
-                    prizeList.Remove(prize);
-                    i--;
-                }
-            }
-        }
-
-        private void glControl_Render(TimeSpan obj)
+        private void GlControl_Render(TimeSpan obj)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -705,12 +419,11 @@ namespace DirigibleBattle
             });
 
             ObjectRenderer.RenderObjects(mountainRange, new Vector2[4] {
-                new Vector2(-1.0f, 0.8f),
-                new Vector2(1.0f, 0.8f),
+                new Vector2(-1.0f, 0.775f),
+                new Vector2(1.0f, 0.775f),
                 new Vector2(1.0f, 1.0f),
                 new Vector2(-1.0f, 1f),
             });
-
             firstPlayer.Render();
             secondPlayer.Render();
 
@@ -722,7 +435,6 @@ namespace DirigibleBattle
             {
                 bullet.Render();
             }
-
             foreach (Prize prize in prizeList)
             {
                 prize.Render();
