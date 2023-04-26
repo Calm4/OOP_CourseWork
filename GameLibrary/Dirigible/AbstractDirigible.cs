@@ -39,7 +39,7 @@ namespace GameLibrary.Dirigible
         public abstract void Move(Vector2 movement);
         public abstract void Idle();
 
-        protected virtual float[] Convert(float pointX, float pointY)
+        public virtual float[] Convert(float pointX, float pointY)
         {
             float centralPointX = 0.5f;
             float centralPointY = 0.5f;

@@ -19,10 +19,10 @@ namespace GameLibrary.Dirigible
             this.PassiveSpeed = new Vector2(0, 0.001f);
 
             Health = 100;
-            Armor = 50;
-            Ammo = 30;
+            Armor = 25;
+            Ammo = 25;
             Speed = 0.01f; // ????
-            Fuel = 3000; //2000
+            Fuel = 2000; //2000
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
             dirigibleWindEffect = new Vector2(0.0f, 0.0f);

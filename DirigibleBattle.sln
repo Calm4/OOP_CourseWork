@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrizesLibrary", "PrizesLibr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmmunitionLibrary", "AmmunitionLibrary\AmmunitionLibrary.csproj", "{7DDE30F6-4D8A-42B7-B1C6-283C6B567669}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameTests", "GameTests\GameTests.csproj", "{BDA41A2B-8C3A-4E12-9ED6-852A551E4B1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7DDE30F6-4D8A-42B7-B1C6-283C6B567669}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DDE30F6-4D8A-42B7-B1C6-283C6B567669}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DDE30F6-4D8A-42B7-B1C6-283C6B567669}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDA41A2B-8C3A-4E12-9ED6-852A551E4B1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA41A2B-8C3A-4E12-9ED6-852A551E4B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA41A2B-8C3A-4E12-9ED6-852A551E4B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA41A2B-8C3A-4E12-9ED6-852A551E4B1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
