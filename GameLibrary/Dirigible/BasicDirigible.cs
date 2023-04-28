@@ -166,6 +166,13 @@ namespace GameLibrary.Dirigible
         {
             IsMove = true;
             PositionCenter += PassiveSpeed;
+            if (Fuel <= 0)
+            {
+                if (IsWindWork)
+                {
+                    PositionCenter += dirigibleWindEffect;
+                }
+            }
             IsMove = false;
         }
         /// <summary>
