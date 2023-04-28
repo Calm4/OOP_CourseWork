@@ -40,11 +40,8 @@ namespace GameLibrary
         {
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-
             // лево право низ верх z-вблизи z-вдали
             GL.Ortho(-1f, 1f, 1f, -1f, 0f, 1f);
-
-
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 

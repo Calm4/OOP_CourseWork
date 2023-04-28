@@ -66,10 +66,21 @@ namespace DirigibleBattle
         private int numberOfSecondPlayerPrizes = 0;
 
         int commonBulletTexture;
+        int fastBulletTexture;
+        int heavyBulletTexture;
         int firstDirigibleTextureRight;
         int firstDirigibleTextureLeft;
         int secondDirigibleTextureRight;
         int secondDirigibleTextureLeft;
+
+        // ПОДУМАТЬ О РЕАЛИЗАЦИИ ВЕТРА
+        readonly private bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
+        readonly private bool isSecondPlayerWindLeft = false;
+        private int windCounter = 0;
+        private float windSpeedPlayer = 0.0f;
+        private int windIsWork = 4;
+        private int windTimerTicks = 50;
+        private bool isWork = false;
 
         readonly List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
             {
@@ -125,7 +136,9 @@ namespace DirigibleBattle
             firstDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_red_left_side.png");
             secondDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_blue_right_side.png");
             secondDirigibleTextureLeft = CreateTexture.LoadTexture("dirigible_blue_left_side.png");
-            commonBulletTexture = CreateTexture.LoadTexture("CommonPulya.png");
+            commonBulletTexture = CreateTexture.LoadTexture("CommonBullet.png");
+            fastBulletTexture = CreateTexture.LoadTexture("FastBullet.png");
+            heavyBulletTexture = CreateTexture.LoadTexture("HeavyBullet.png");
             backGroundTexture = CreateTexture.LoadTexture("clouds2.png");
             mountainRange = CreateTexture.LoadTexture("mountine2.png");
         }
@@ -140,10 +153,10 @@ namespace DirigibleBattle
         }
         private void StartTimer()
         {
-            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; // ~100 FPS
+            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; 
             gameTimer.Tick += GameTimer_Tick;
 
-            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; // ~60
+            prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) };
             prizeTimer.Tick += PrizeTimer_Tick;
 
             windTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) };
@@ -154,15 +167,8 @@ namespace DirigibleBattle
             windTimer.Start();
         }
 
-        // ПОДУМАТЬ О РЕАЛИЗАЦИИ ВЕТРА
-        readonly private bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
-        readonly private bool isSecondPlayerWindLeft = false;
-        private int windCounter = 0;
-        private float windSpeedPlayer = 0.0f;
-        private int windIsWork = 4;
-        private int windTimerTicks = 50;
-        private bool s = false;
-        private void WindTimer_Tick(object sender, EventArgs e)
+        
+        private void WindTimer_Tick(object sender, EventArgs e) 
         {
             if (windIsWork == 4)
             {
@@ -186,7 +192,7 @@ namespace DirigibleBattle
                 }
                 else
                 {
-                    s = true;
+                    isWork = true;
                     windIsWork = random.Next(1, 5);
                     windCounter = 0;
                     windTimerTicks = random.Next(100, 301);
@@ -195,7 +201,7 @@ namespace DirigibleBattle
             else
             {
 
-                if (s)
+                if (isWork)
                 {
                     windIsWork = random.Next(1, 5);
                 }
@@ -207,12 +213,22 @@ namespace DirigibleBattle
                     secondPlayer.ChangeWindDirection(false);
                 }
             }
+
+
+            WindDirection();
         }
         private void PrizeTimer_Tick(object sender, EventArgs e)
         {
-            if (prizeList.Count < 3)
+            if (prizeList.Count < 3 && (numberOfFirstPlayerPrizes < 15 || numberOfSecondPlayerPrizes < 15))
             {
                 prizeList.Add(prizeFactory.AddNewPrize());
+            }
+            for (int i = 0; i < prizeList.Count; i++)
+            {
+                if (numberOfFirstPlayerPrizes >= 15 && numberOfSecondPlayerPrizes >= 15)
+                {
+                    prizeList.RemoveAt(prizeList.Count - 1);
+                }
             }
         }
 
@@ -227,7 +243,6 @@ namespace DirigibleBattle
             ApplyPrize(prizeList, ref firstPlayer, ref numberOfFirstPlayerPrizes);
             ApplyPrize(prizeList, ref secondPlayer, ref numberOfSecondPlayerPrizes);
 
-            WindDirection();
 
             PlayerShootControl(firstPlayerFire, firstPlayerAmmo, ref firstPlayer);
             PlayerShootControl(secondPlayerFire, secondPlayerAmmo, ref secondPlayer);
@@ -334,11 +349,11 @@ namespace DirigibleBattle
                     }
                     if (playerFireFast)
                     {
-                        bulletsList.Add(new FastBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
+                        bulletsList.Add(new FastBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), fastBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
                     }
                     if (playerFireHeavy)
                     {
-                        bulletsList.Add(new HeavyBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), commonBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
+                        bulletsList.Add(new HeavyBullet(player.GetGunPosition() - new Vector2(0f, -0.05f), heavyBulletTexture, player.DirigibleID == firstDirigibleTextureRight));
                     }
                     player.Ammo--;
                 }
@@ -392,17 +407,31 @@ namespace DirigibleBattle
                 Close();
             }
 
-            if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()) || firstPlayer.Health <= 0)
+            if (mountineCollider.IntersectsWith(firstPlayer.GetCollider()))
             {
                 gameTimer.Stop();
-                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ\n\tИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ\n\tИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
                                         MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
-            if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()) || secondPlayer.Health <= 0)
+            if (firstPlayer.Health <= 0)
             {
                 gameTimer.Stop();
-                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ\n\tИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
+                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
+                                        MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
+            if (mountineCollider.IntersectsWith(secondPlayer.GetCollider()))
+            {
+                gameTimer.Stop();
+                MessageBox.Show("ПОБЕДИЛ ИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ\n\tИГРОК НА [СИНЕМ] ДИРИЖАБЛЕ ВРЕЗАЛСЯ В ГОРУ", "ИГРА ОКОНЧЕНА",
+                                    MessageBoxButton.OK, MessageBoxImage.Information);
+                Close();
+            }
+            if (secondPlayer.Health <= 0)
+            {
+                gameTimer.Stop();
+                MessageBox.Show("\tПОБЕДИЛ ИГРОК НА [КРАСНОМ] ДИРИЖАБЛЕ", "ИГРА ОКОНЧЕНА",
                                     MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
@@ -435,6 +464,7 @@ namespace DirigibleBattle
             {
                 bullet.Render();
             }
+
             foreach (Prize prize in prizeList)
             {
                 prize.Render();
