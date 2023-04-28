@@ -6,8 +6,16 @@ using System.Drawing;
 
 namespace GameLibrary.Dirigible
 {
+    /// <summary>
+    /// Базовый класс дирижаблей
+    /// </summary>
     public class BasicDirigible : AbstractDirigible
     {
+        /// <summary>
+        /// Конструктор класса BasicDirigible
+        /// </summary>
+        /// <param name="startPosition">Стартовая позиция</param>
+        /// <param name="textrureID">ID текстуры</param>
         public BasicDirigible(Vector2 startPosition, int textrureID)
         {
             PositionCenter = startPosition;
@@ -24,22 +32,58 @@ namespace GameLibrary.Dirigible
             dirigibleWindEffect = new Vector2(0.0f, 0.0f);
 
         }
+        /// <summary>
+        /// Изменение направления с ветром
+        /// </summary>
+        /// <param name="newWindSpeed"></param>
         public override void ChangeDirectionWithWind(Vector2 newWindSpeed)
         {
             dirigibleWindEffect = newWindSpeed;
         }
+        /// <summary>
+        /// Изменение направления ветра
+        /// </summary>
+        /// <param name="turnOver">Изменение направлен</param>
         public override void ChangeWindDirection(bool turnOver)
         {
             IsWindWork = turnOver;
         }
+        /// <summary>
+        /// Пассивная скорость
+        /// </summary>
         public Vector2 PassiveSpeed { get; set; }
+        /// <summary>
+        /// Запас здоровья
+        /// </summary>
         public override int Health { get; set; }
+        /// <summary>
+        /// Запас брони
+        /// </summary>
         public override int Armor { get; set; }
+        /// <summary>
+        /// Запас топлива
+        /// </summary>
         public override int Fuel { get; set; }
+        /// <summary>
+        /// Боезапас дирижабля
+        /// </summary>
         public override int Ammo { get; set; }
+        /// <summary>
+        /// Скорость передвижения
+        /// </summary>
         public override float Speed { get; set; }
+        /// <summary>
+        /// ID текстуры дирижабля
+        /// </summary>
         public override int DirigibleID { get; set; }
 
+        /// <summary>
+        /// Управление дирижаблем
+        /// </summary>
+        /// <param name="keys">Список кнопок</param>
+        /// <param name="textureIdLeft">Текстура дирижабля смотрящая влево</param>
+        /// <param name="textureIdRight">Текстура дирижабля смотрящая вправо</param>
+        /// <param name="playArea">Область игрового поля</param>
         public override void Control(List<Key> keys, int textureIdLeft, int textureIdRight, RectangleF playArea)
         {
             // W S A D
@@ -75,6 +119,10 @@ namespace GameLibrary.Dirigible
             Move(moveVectorFirstPlayer);
         }
 
+        /// <summary>
+        /// Получить позицию пушки
+        /// </summary>
+        /// <returns></returns>
         public override Vector2 GetGunPosition()
         {
             // Позиция пушки относительно координат дирижабля
@@ -86,6 +134,10 @@ namespace GameLibrary.Dirigible
 
             return gunPosition;
         }
+        /// <summary>
+        /// Получение урона
+        /// </summary>
+        /// <param name="damage">Урон</param>
         public override void GetDamage(int damage)
         {
             int tempHealth = damage - Armor;
@@ -107,14 +159,19 @@ namespace GameLibrary.Dirigible
             }
 
         }
-
+        /// <summary>
+        /// Статическое состояние, в котором дирижабль просто падает вниз
+        /// </summary>
         public override void Idle()
         {
             IsMove = true;
             PositionCenter += PassiveSpeed;
             IsMove = false;
         }
-
+        /// <summary>
+        /// Передвижение дирижабля
+        /// </summary>
+        /// <param name="movement">Передвижение</param>
         public override void Move(Vector2 movement)
         {
             if (IsMove || Fuel <= 0)

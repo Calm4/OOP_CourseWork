@@ -6,9 +6,15 @@ using System.Collections.Generic;
 
 namespace GameTests
 {
+    /// <summary>
+    /// Класс для тестирования запаса пуль
+    /// </summary>
     [TestClass]
     public class AmmoTest
     {
+        /// <summary>
+        /// Проверка запаса пуль
+        /// </summary>
         [TestMethod]
         public void AmmoTestMethod()
         {
@@ -26,6 +32,9 @@ namespace GameTests
             Assert.AreEqual(expectedBulletsCount, actualBulletsCount);
 
         }
+        /// <summary>
+        /// Проверка запаса пуль после выстрела
+        /// </summary>
         [TestMethod]
         public void AmmoWithShootTestMethod()
         {

@@ -6,9 +6,15 @@ using System;
 
 namespace GameTests
 {
+    /// <summary>
+    /// Класс на проверку передвижения
+    /// </summary>
     [TestClass]
     public class MovementFuelTest
     {
+        /// <summary>
+        /// Метод на проверку отнятия топлива при полете
+        /// </summary>
         [TestMethod]
         public void MovementCheckTestMethod()
         {
@@ -26,6 +32,9 @@ namespace GameTests
 
             Assert.AreEqual(expectedFuel, actualFuel);
         }
+        /// <summary>
+        /// Проверка на отнятие топлива и его последующего пополнения
+        /// </summary>
         [TestMethod]
         public void MovementCheckWithBoostTest()
         {

@@ -4,9 +4,18 @@ using OpenTK;
 
 namespace GameTests
 {
+    /// <summary>
+    /// Класс на проверку конвертации координат
+    /// </summary>
     [TestClass]
     public class ConverterTest
     {
+        /// <summary>
+        /// Проверка конвертации координат
+        /// </summary>
+        /// <param name="concretePointX">Точка по X</param>
+        /// <param name="concretePointY">Точка по Y</param>
+        /// <param name="concreteExpectedPoints">Ожидаемые точки по X и Y</param>
         [DataTestMethod]
       
         [DataRow(0f, 0f, new float[] { 0.5f, 0.5f })]

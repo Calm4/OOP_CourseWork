@@ -5,8 +5,17 @@ using System.Drawing.Imaging;
 
 namespace GameLibrary
 {
+    /// <summary>
+    /// Класс создания текстур
+    /// </summary>
     public class CreateTexture
     {
+        /// <summary>
+        /// Загрузка текстур из файлов
+        /// </summary>
+        /// <param name="texturePath">Путь картинки</param>
+        /// <returns></returns>
+        /// <exception cref="FileNotFoundException">Error</exception>
         public static int LoadTexture(string texturePath)
         {
 

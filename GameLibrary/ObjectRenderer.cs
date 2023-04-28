@@ -3,8 +3,16 @@ using OpenTK.Graphics.OpenGL;
 
 namespace GameLibrary
 {
+    /// <summary>
+    /// Класс рендеринга объектов
+    /// </summary>
     public class ObjectRenderer
     {
+        /// <summary>
+        /// Рендеринг объектов
+        /// </summary>
+        /// <param name="textureID">ID текстуры</param>
+        /// <param name="objectPosition">Позиция объекта</param>
         public static void RenderObjects(int textureID, Vector2[] objectPosition)
         {
             Begin();
@@ -29,6 +37,9 @@ namespace GameLibrary
 
             GL.End();
         }
+        /// <summary>
+        /// Загрузка необходимых элементов
+        /// </summary>
         private static void Begin()
         {
             GL.MatrixMode(MatrixMode.Projection);

@@ -22,50 +22,153 @@ namespace DirigibleBattle
     /// </summary>
     public partial class MainWindow
     {
+        /// <summary>
+        /// Объект первого игрока
+        /// </summary>
         AbstractDirigible firstPlayer;
+        /// <summary>
+        /// Объект второго игрока
+        /// </summary>
         AbstractDirigible secondPlayer;
 
+        /// <summary>
+        /// Амуниция превого игрока
+        /// </summary>
         List<Bullet> firstPlayerAmmo;
+        /// <summary>
+        /// Амуниция второго игрока
+        /// </summary>
         List<Bullet> secondPlayerAmmo;
 
+        /// <summary>
+        /// Проверка на нажат ли выстрел у первого игрока
+        /// </summary>
         bool wasFirstPlayerFirePressed = false;
+        /// <summary>
+        /// Проверка на нажат ли выстрел у второго игрока
+        /// </summary>
         bool wasSecondPlayerFirePressed = false;
 
+        /// <summary>
+        /// Игровой таймер
+        /// </summary>
         DispatcherTimer gameTimer;
+        /// <summary>
+        /// Таймер призов
+        /// </summary>
         DispatcherTimer prizeTimer;
+        /// <summary>
+        /// Таймер ветра
+        /// </summary>
         DispatcherTimer windTimer;
 
+        /// <summary>
+        /// Фабрика призов
+        /// </summary>
         readonly PrizeFactory prizeFactory = new PrizeFactory();
+        /// <summary>
+        /// Список призов
+        /// </summary>
         readonly List<Prize> prizeList = new List<Prize>();
+        /// <summary>
+        /// Генератор для рандомных значений
+        /// </summary>
         readonly Random random = new Random();
 
+        /// <summary>
+        /// Коллайдер горного массива
+        /// </summary>
         RectangleF mountineCollider;
+        /// <summary>
+        /// Коллайдер игрового окна
+        /// </summary>
         RectangleF screenBorderCollider;
+        /// <summary>
+        /// Клавиатурные состояния
+        /// </summary>
         KeyboardState keyboardState;
 
+        /// <summary>
+        /// Текстура заднего фона
+        /// </summary>
         int backGroundTexture;
+        /// <summary>
+        /// Текстура горного массива
+        /// </summary>
         int mountainRange;
 
+        /// <summary>
+        /// Количество призов у первого игрока
+        /// </summary>
         private int numberOfFirstPlayerPrizes = 0;
+        /// <summary>
+        /// Количество призов у второго игрока
+        /// </summary>
         private int numberOfSecondPlayerPrizes = 0;
 
+        /// <summary>
+        /// Текстура простой пули
+        /// </summary>
         int commonBulletTexture;
+        /// <summary>
+        /// Текстура быстрой пули
+        /// </summary>
         int fastBulletTexture;
+        /// <summary>
+        /// Текстура тяжелой пули
+        /// </summary>
         int heavyBulletTexture;
+        /// <summary>
+        /// Текстура первого дирижабля смотрящего вправо
+        /// </summary>
         int firstDirigibleTextureRight;
+        /// <summary>
+        /// Текстура первого дирижабля смотрящего влево
+        /// </summary>
         int firstDirigibleTextureLeft;
+        /// <summary>
+        /// Текстура второго дирижабля смотрящего вправо
+        /// </summary>
         int secondDirigibleTextureRight;
+        /// <summary>
+        /// Текстура второго дирижабля смотрящего влево
+        /// </summary>
         int secondDirigibleTextureLeft;
 
-        // ПОДУМАТЬ О РЕАЛИЗАЦИИ ВЕТРА
+        /// <summary>
+        /// Проверка состояния ветра первого игрока
+        /// </summary>
         readonly private bool isFirstPlayerWindLeft = false; // true - ветер дует налево, false - направо
+
+        /// <summary>
+        /// Проверка состояния ветра второго игрока
+        /// </summary>
         readonly private bool isSecondPlayerWindLeft = false;
+
+        /// <summary>
+        /// Время действия ветра в тиках
+        /// </summary>
         private int windCounter = 0;
+        /// <summary>
+        /// Скорость ветра
+        /// </summary>
         private float windSpeedPlayer = 0.0f;
+        /// <summary>
+        /// Проверка на работу ветра
+        /// </summary>
         private int windIsWork = 4;
+        /// <summary>
+        /// Тики ветров
+        /// </summary>
         private int windTimerTicks = 50;
+        /// <summary>
+        /// Проверка отключен ли ветер или нет
+        /// </summary>
         private bool isWork = false;
 
+        /// <summary>
+        /// Список кнопок для первого игрока
+        /// </summary>
         readonly List<OpenTK.Input.Key> firstPlayerInput = new List<OpenTK.Input.Key>()
             {
                 OpenTK.Input.Key.W,
@@ -73,6 +176,9 @@ namespace DirigibleBattle
                 OpenTK.Input.Key.A,
                 OpenTK.Input.Key.D,
             };
+        /// <summary>
+        /// Список кнопок для второго игрока
+        /// </summary>
         readonly List<OpenTK.Input.Key> secondPlayerInput = new List<OpenTK.Input.Key>()
             {
                 OpenTK.Input.Key.Up,
@@ -80,13 +186,18 @@ namespace DirigibleBattle
                 OpenTK.Input.Key.Left,
                 OpenTK.Input.Key.Right,
             };
-
+        /// <summary>
+        /// Список кнопок для стрельбы первого игрока
+        /// </summary>
         readonly List<OpenTK.Input.Key> firstPlayerFire = new List<OpenTK.Input.Key>()
         {
             OpenTK.Input.Key.Z,
             OpenTK.Input.Key.X,
             OpenTK.Input.Key.C,
         };
+        /// <summary>
+        /// Список кнопок для стрельбы второго игрока
+        /// </summary>
         readonly List<OpenTK.Input.Key> secondPlayerFire = new List<OpenTK.Input.Key>()
         {
             OpenTK.Input.Key.Insert,
@@ -94,7 +205,9 @@ namespace DirigibleBattle
             OpenTK.Input.Key.PageDown,
         };
 
-
+        /// <summary>
+        /// Конструктор окна MainWindow
+        /// </summary>
         public MainWindow()
         {
             
@@ -105,6 +218,9 @@ namespace DirigibleBattle
             StartTimer();
         }
 
+        /// <summary>
+        /// Задает настройки запускаемого проекта
+        /// </summary>
         private void GameSettings()
         {
             var settings = new GLWpfControlSettings { MajorVersion = 3, MinorVersion = 6 };
@@ -114,6 +230,9 @@ namespace DirigibleBattle
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
+        /// <summary>
+        /// Добавление на текстуры картинки
+        /// </summary>
         private void AddTexture()
         {
             firstDirigibleTextureRight = CreateTexture.LoadTexture("dirigible_red_right_side.png");
@@ -126,6 +245,9 @@ namespace DirigibleBattle
             backGroundTexture = CreateTexture.LoadTexture("clouds2.png");
             mountainRange = CreateTexture.LoadTexture("mountine2.png");
         }
+        /// <summary>
+        /// Инициализация объектов
+        /// </summary>
         private void AddObjects()
         {
             firstPlayer = new BasicDirigible(new Vector2(-0.6f, -0.4f), firstDirigibleTextureRight);
@@ -135,6 +257,9 @@ namespace DirigibleBattle
             screenBorderCollider = new RectangleF(0f, 0.125f, 1.025f, 0.875f);
             mountineCollider = new RectangleF(0.0f, -0.1f, 1.0f, 0.185f);
         }
+        /// <summary>
+        /// Запуск таймеров
+        /// </summary>
         private void StartTimer()
         {
             gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; 
@@ -151,7 +276,9 @@ namespace DirigibleBattle
             windTimer.Start();
         }
 
-        
+        /// <summary>
+        /// Таймер ветра
+        /// </summary>
         private void WindTimer_Tick(object sender, EventArgs e) 
         {
             if (windIsWork == 4)
@@ -201,6 +328,9 @@ namespace DirigibleBattle
 
             WindDirection();
         }
+        /// <summary>
+        /// Таймер призов
+        /// </summary>
         private void PrizeTimer_Tick(object sender, EventArgs e)
         {
             if (prizeList.Count < 3 && (numberOfFirstPlayerPrizes < 15 || numberOfSecondPlayerPrizes < 15))
@@ -215,7 +345,9 @@ namespace DirigibleBattle
                 }
             }
         }
-
+        /// <summary>
+        /// Игровой таймер
+        /// </summary>
         private void GameTimer_Tick(object sender, EventArgs e)
         {
             // что бы игра не была бесконечной, игрок может подобрать только до 15 призов
@@ -246,6 +378,9 @@ namespace DirigibleBattle
                                         $"Fuel:{secondPlayer.Fuel}/3000\nPrizes:{numberOfSecondPlayerPrizes}/15\n";
 
         }
+        /// <summary>
+        /// Направление ветра
+        /// </summary>
         private void WindDirection()
         {
             if ((firstPlayer.GetCollider().X <= screenBorderCollider.X) && !isFirstPlayerWindLeft)
@@ -269,6 +404,12 @@ namespace DirigibleBattle
             else
                 secondPlayer.ChangeWindDirection(true);
         }
+        /// <summary>
+        /// Применение призов
+        /// </summary>
+        /// <param name="prizeList">Список призов</param>
+        /// <param name="player">Игрок</param>
+        /// <param name="prizeCounter">Количество призов</param>
         private void ApplyPrize(List<Prize> prizeList, ref AbstractDirigible player, ref int prizeCounter)
         {
             for (int i = 0; i < prizeList.Count; i++)
@@ -313,6 +454,12 @@ namespace DirigibleBattle
             }
         }
 
+        /// <summary>
+        /// Стрельба игрока
+        /// </summary>
+        /// <param name="keys">Набор кнопок для стрельбы</param>
+        /// <param name="bulletsList">Список пуль</param>
+        /// <param name="player">Игрок</param>
         private void PlayerShootControl(List<OpenTK.Input.Key> keys, List<Bullet> bulletsList, ref AbstractDirigible player)
         {
             keyboardState = OpenTK.Input.Keyboard.GetState();
@@ -380,6 +527,9 @@ namespace DirigibleBattle
                 }
             }
         }
+        /// <summary>
+        /// Проверка состояния игры
+        /// </summary>
         private void GameStateCheck()
         {
 
@@ -420,6 +570,10 @@ namespace DirigibleBattle
                 Close();
             }
         }
+        /// <summary>
+        /// Рендер при помощи GLControl
+        /// </summary>
+        /// <param name="obj">Объект</param>
         private void GlControl_Render(TimeSpan obj)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

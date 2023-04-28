@@ -4,15 +4,30 @@ using System.Drawing;
 
 namespace PrizesLibrary.Prizes
 {
+    /// <summary>
+    /// Абстрактный класс приза
+    /// </summary>
     public abstract class Prize
     {
+        /// <summary>
+        /// Расположение центра
+        /// </summary>
         protected Vector2 centerPosition;
+        /// <summary>
+        /// ID текстуры
+        /// </summary>
         protected int textureID;
 
+        /// <summary>
+        /// Рендер приза
+        /// </summary>
         public void Render()
         {
             ObjectRenderer.RenderObjects(textureID, GetPosition());
         }
+        /// <summary>
+        /// Получение коллайдера
+        /// </summary>
         public RectangleF GetCollider()
         {
             Vector2[] colliderPosition = GetPosition();
@@ -26,6 +41,12 @@ namespace PrizesLibrary.Prizes
 
             return collider;
         }
+        /// <summary>
+        /// Преобразование координат
+        /// </summary>
+        /// <param name="pointX">Точка по оси X</param>
+        /// <param name="pointY">Точка по оси Y</param>
+        /// <returns></returns>
         private static float[] Convert(float pointX, float pointY)
         {
             float centralPointX = 0.5f;
@@ -38,6 +59,10 @@ namespace PrizesLibrary.Prizes
 
             return resultPoint;
         }
+        /// <summary>
+        /// Получение размера объекта
+        /// </summary>
+        /// <returns></returns>
         protected Vector2[] GetPosition()
         {
             return new Vector2[4]

@@ -6,9 +6,15 @@ using System;
 
 namespace GameTests
 {
+    /// <summary>
+    /// Класс на проверку урона
+    /// </summary>
     [TestClass]
     public class DamageTest
     {
+        /// <summary>
+        /// Проверка получения урона без брони
+        /// </summary>
         [TestMethod]
         public void GetDamageTestMethod()
         {
@@ -24,6 +30,9 @@ namespace GameTests
             Assert.AreEqual(expectedHealth, actualHealth);
 
         }
+        /// <summary>
+        /// Проверка получения урона с бронёй
+        /// </summary>
         [TestMethod]
         public void GetDamageWithArmorTestMethod()
         {
@@ -38,6 +47,9 @@ namespace GameTests
 
             Assert.AreEqual(expectedHealth, actualHealth);
         }
+        /// <summary>
+        /// Проверка получения урона с броней и последующим повышением характеристик с помощью декоратора
+        /// </summary>
         [TestMethod]
         public void GetDamageWithArmorAndBoostTestMethod()
         {

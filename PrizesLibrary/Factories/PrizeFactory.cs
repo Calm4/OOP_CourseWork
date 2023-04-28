@@ -4,15 +4,15 @@ using OpenTK;
 
 namespace PrizesLibrary.Factories
 {
-    /* public abstract class PrizeFactory
-     {
-        //??? public abstract Prize CreatePrize(Vector2 centerPosition, int textureID);
-         public abstract Prize CreatePrize(int textureID, Vector2 centerPosition);
-
-
-     }*/
+    /// <summary>
+    /// Класс фабрики по генерации призов
+    /// </summary>
     public class PrizeFactory
     {
+        /// <summary>
+        /// Создание нового приза
+        /// </summary>
+        /// <returns>Случайный подарок</returns>
         public Prize AddNewPrize()
         {
 

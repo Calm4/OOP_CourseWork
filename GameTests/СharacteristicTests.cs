@@ -6,9 +6,15 @@ using OpenTK;
 
 namespace GameTests
 {
+    /// <summary>
+    /// Класс для проверки навешивания декораторов
+    /// </summary>
     [TestClass]
     public class СharacteristicTests
     {
+        /// <summary>
+        /// Проверка пополнения запаса пуль
+        /// </summary>
         [TestMethod]
         public void AmmoTestMethod()
         {
@@ -17,7 +23,7 @@ namespace GameTests
             Random random = new Random();
             AbstractDirigible dirigible = new BasicDirigible(Vector2.Zero,0);
 
-
+            
             int expectedAmmo = random.Next(1,5);
             int currentDirigibleAmmo = dirigible.Ammo;
             int actualAmmo;
@@ -26,6 +32,9 @@ namespace GameTests
             actualAmmo = dirigible.Ammo;
             Assert.AreEqual(currentDirigibleAmmo + expectedAmmo, actualAmmo);
         }
+        /// <summary>
+        /// Проверка пополнения запаса брони
+        /// </summary>
         [TestMethod]
         public void ArmorTestMethod()
         {
@@ -41,6 +50,9 @@ namespace GameTests
 
             Assert.AreEqual(currentDirigibleArmor + expectedArmor, actualArmor);
         }
+        /// <summary>
+        /// Проверка пополнения запаса топлива
+        /// </summary>
         [TestMethod]
         public void FuelTestMethod()
         {
@@ -56,6 +68,9 @@ namespace GameTests
 
             Assert.AreEqual(currentDirigibleArmor + expectedFuel, actualFuel);
         }
+        /// <summary>
+        /// Проверка пополнения запаса жизней
+        /// </summary>
         [TestMethod]
         public void HealthTestMethod()
         {
@@ -71,6 +86,9 @@ namespace GameTests
 
             Assert.AreEqual(currentDirigibleHealth + expectedHealth, actualHealth);
         }
+        /// <summary>
+        /// Проверка на увеличение скорости передвижения
+        /// </summary>
         [TestMethod]
         public void SpeedTestMethod()
         {
