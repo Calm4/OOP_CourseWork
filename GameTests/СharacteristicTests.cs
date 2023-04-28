@@ -1,12 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using AmmunitionLibrary;
 using GameLibrary.Dirigible;
 using GameLibrary.DirigibleDecorators;
-using GameLibrary;
 using OpenTK;
-using OpenTK.Graphics;
-using DirigibleBattle;
 
 namespace GameTests
 {

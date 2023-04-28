@@ -1,12 +1,8 @@
 ﻿using OpenTK;
 using OpenTK.Input;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GameLibrary.Dirigible
 {
@@ -19,7 +15,7 @@ namespace GameLibrary.Dirigible
             this.PassiveSpeed = new Vector2(0, 0.001f);
 
             Health = 100;
-            Armor = 25;
+            Armor = 20;
             Ammo = 25;
             Speed = 0.01f; // ????
             Fuel = 2000; //2000

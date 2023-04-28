@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PrizesLibrary.Prizes;
-using System.Drawing;
-using PrizesLibrary;
 using OpenTK;
-using GameLibrary.Dirigible;
-using GameLibrary.DirigibleDecorators;
-using GameLibrary;
 
 namespace PrizesLibrary.Factories
 {

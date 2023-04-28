@@ -1,9 +1,7 @@
 ﻿using AmmunitionLibrary;
-using DirigibleBattle;
 using GameLibrary.Dirigible;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenTK;
-using System;
 using System.Collections.Generic;
 
 namespace GameTests

@@ -1,34 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using OpenTK.Wpf;
-using System.Security.Policy;
 using System.Drawing;
 using System.Windows.Threading;
-using System.Diagnostics;
 using AmmunitionLibrary;
 using GameLibrary;
 using GameLibrary.DirigibleDecorators;
 using GameLibrary.Dirigible;
 using PrizesLibrary.Factories;
 using PrizesLibrary.Prizes;
-using PrizesLibrary;
 
 
 namespace DirigibleBattle

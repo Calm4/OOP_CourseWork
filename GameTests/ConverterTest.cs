@@ -1,7 +1,6 @@
 ﻿using GameLibrary.Dirigible;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenTK;
-using System;
 
 namespace GameTests
 {
