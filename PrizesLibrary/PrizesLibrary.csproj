@@ -45,12 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Factories\AmmoPrizeFactory.cs" />
-    <Compile Include="Factories\ArmorPrizeFactory.cs" />
-    <Compile Include="Factories\FuelPrizeFactory.cs" />
-    <Compile Include="Factories\HealthPrizeFactory.cs" />
-    <Compile Include="Factories\PrizeFactory.cs" />
-    <Compile Include="Factories\SpeedBoostPrizeFactory.cs" />
+    <Compile Include="Factory\PrizeFactory.cs" />
     <Compile Include="Prizes\AmmoPrize.cs" />
     <Compile Include="Prizes\ArmorPrize.cs" />
     <Compile Include="Prizes\FuelPrize.cs" />
