@@ -25,7 +25,7 @@ namespace GameLibrary.Dirigible
             Health = 100;
             Armor = 20;
             Ammo = 25;
-            Speed = 0.01f; // ????
+            Speed = 0.1f; // ????
             Fuel = 2000; //2000
             IsShoot = false;
             gunOffset = new Vector2(0, 0f);
@@ -183,7 +183,7 @@ namespace GameLibrary.Dirigible
         {
             if (IsMove || Fuel <= 0)
                 return;
-            PositionCenter += movement;
+            PositionCenter += movement * Speed;
             Fuel--;
             if (IsWindWork)
                 PositionCenter += dirigibleWindEffect;

@@ -153,18 +153,11 @@ namespace DirigibleBattle
         /// Скорость ветра
         /// </summary>
         private float windSpeedPlayer = 0.0f;
-        /// <summary>
-        /// Проверка на работу ветра
-        /// </summary>
-        private int windIsWork = 4;
+
         /// <summary>
         /// Тики ветров
         /// </summary>
         private int windTimerTicks = 50;
-        /// <summary>
-        /// Проверка отключен ли ветер или нет
-        /// </summary>
-        private bool isWork = false;
 
         /// <summary>
         /// Список кнопок для первого игрока
@@ -210,7 +203,7 @@ namespace DirigibleBattle
         /// </summary>
         public MainWindow()
         {
-            
+
             InitializeComponent();
             GameSettings();
             AddTexture();
@@ -262,7 +255,7 @@ namespace DirigibleBattle
         /// </summary>
         private void StartTimer()
         {
-            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) }; 
+            gameTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) };
             gameTimer.Tick += GameTimer_Tick;
 
             prizeTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(8.0) };
@@ -279,53 +272,33 @@ namespace DirigibleBattle
         /// <summary>
         /// Таймер ветра
         /// </summary>
-        private void WindTimer_Tick(object sender, EventArgs e) 
+        private void WindTimer_Tick(object sender, EventArgs e)
         {
-            if (windIsWork == 4)
+            if (windCounter <= windTimerTicks)
             {
-                if (windCounter <= windTimerTicks)
-                {
-                    windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
-                    firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
-                    firstPlayer.ChangeWindDirection(true);
-                    secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
-                    secondPlayer.ChangeWindDirection(true);
-                    windCounter++;
-                }
-                else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
-                {
-                    windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0005) + 0.0005);
-                    firstPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
-                    firstPlayer.ChangeWindDirection(true);
-                    secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
-                    secondPlayer.ChangeWindDirection(true);
-                    windCounter++;
-                }
-                else
-                {
-                    isWork = true;
-                    windIsWork = random.Next(1, 5);
-                    windCounter = 0;
-                    windTimerTicks = random.Next(100, 301);
-                }
+                windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0001f) + 0.0001f);
+
+                firstPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
+                firstPlayer.ChangeWindDirection(true);
+                secondPlayer.ChangeDirectionWithWind(new Vector2(windSpeedPlayer, 0.0f));
+                secondPlayer.ChangeWindDirection(true);
+                windCounter++;
+            }
+            else if (windCounter >= (windTimerTicks + 1) && windCounter <= windTimerTicks * 2)
+            {
+                windSpeedPlayer = (float)(random.NextDouble() * (0.005f - 0.0001f) + 0.0001f);
+
+                firstPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
+                firstPlayer.ChangeWindDirection(true);
+                secondPlayer.ChangeDirectionWithWind(new Vector2(-windSpeedPlayer, 0.0f));
+                secondPlayer.ChangeWindDirection(true);
+                windCounter++;
             }
             else
             {
-
-                if (isWork)
-                {
-                    windIsWork = random.Next(1, 5);
-                }
-                else
-                {
-                    firstPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
-                    firstPlayer.ChangeWindDirection(false);
-                    secondPlayer.ChangeDirectionWithWind(new Vector2(0, 0.0f));
-                    secondPlayer.ChangeWindDirection(false);
-                }
+                windCounter = 0;
+                windTimerTicks = random.Next(100, 301);
             }
-
-
             WindDirection();
         }
         /// <summary>
@@ -370,11 +343,11 @@ namespace DirigibleBattle
             secondPlayer.Control(secondPlayerInput, secondDirigibleTextureLeft, secondDirigibleTextureRight, screenBorderCollider);
 
             firstPlayerInfo.Content = $"HP:{firstPlayer.Health}/200\nArmor:{firstPlayer.Armor}/50\n" +
-                                        $"Ammo:{firstPlayer.Ammo}/30\nSpeed:{firstPlayer.Speed * 100:F1}x/2.0x\n" +
-                                        $"Fuel:{firstPlayer.Fuel}/3000\nPrizes:{numberOfFirstPlayerPrizes}/15\n";
+                             $"Ammo:{firstPlayer.Ammo}/30\nSpeed:{firstPlayer.Speed * 10f:F1}x/1.5x\n" +
+                             $"Fuel:{firstPlayer.Fuel}/3000\nPrizes:{numberOfFirstPlayerPrizes}/15\n";
 
             secondPlayerInfo.Content = $"HP:{secondPlayer.Health}/200\nArmor:{secondPlayer.Armor}/50\n" +
-                                        $"Ammo:{secondPlayer.Ammo}/30\nSpeed:{secondPlayer.Speed * 100:F1}x/2.0x\n" +
+                                        $"Ammo:{secondPlayer.Ammo}/30\nSpeed:{secondPlayer.Speed * 10f:F1}x/1.5x\n" +
                                         $"Fuel:{secondPlayer.Fuel}/3000\nPrizes:{numberOfSecondPlayerPrizes}/15\n";
 
         }
@@ -444,7 +417,7 @@ namespace DirigibleBattle
                     }
                     if (prize.GetType().Equals(typeof(SpeedBoostPrize)))
                     {
-                        float speedBoostCount = (float)(random.NextDouble() * 0.002 + 0.0005);
+                        float speedBoostCount = (float)(random.NextDouble() * 0.02 + 0.005);
                         player = new SpeedBoostDecorator(player, speedBoostCount);
                         prizeCounter++;
                     }
