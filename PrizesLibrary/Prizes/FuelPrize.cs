@@ -14,7 +14,7 @@ namespace PrizesLibrary.Prizes
         /// <param name="centerPosition">Расположение центра</param>
         public FuelPrize(Vector2 centerPosition)
         {
-            this.textureID = this.textureID = CreateTexture.LoadTexture("fuelPrize.png");
+            this.textureID = CreateTexture.LoadTexture("fuelPrize.png");
             this.centerPosition = centerPosition;
         }
     }
